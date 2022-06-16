@@ -17,7 +17,8 @@ affected species and columns the species affecting it. Interactions are drawn fr
 with the mean 0.0 and where standard deviation can be chosen. Sparcity to interactions map is
 introduced by setting some interactions to zero. Boolean indexing for this is created by drawing
 from a bernoulli distribution, where probability of setting a value to zero can be chosen by giving
-value for "sparcity" in function call. Selfinteractions are then set to -1
+value for "sparcity" in function call. Selfinteractions are then set to negative values based on the
+originally drawn values.
 
 generate_starting_abundances: Generates the abundances of each species at start of simulation
 by drawing from a normal distribution where the mean and standard deviation can be set.
@@ -40,11 +41,14 @@ def generate_pairwise_interactions(n, mean, std, sparcity):
 
     draw = bernoulli(sparcity)
     sparcity_matrix = np.array(np.reshape(draw.rvs(n*n), (n, n)), dtype=bool)
+    for i in range(0,n):
+        sparcity_matrix[i][i] = 0
     interactions_matrix[sparcity_matrix] = 0
 
     for i in range(0,n):
-        interactions_matrix[i][i] = -1
-    
+        if interactions_matrix[i][i] >= 0:
+            interactions_matrix[i][i] = -1*interactions_matrix[i][i]
+
     return interactions_matrix
 
 def generate_starting_abundances(n, mean, std):
