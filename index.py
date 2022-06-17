@@ -58,12 +58,9 @@ def generate_starting_abundances(n, mean, std):
             abundances[i] = abundances[i]*-1
     return abundances
 
-def simulate(n, maxtime, interaction_mean=0.0, interaction_std=0.1, sparcity=0.1, growth_std=0.1, abundances_mean=10000, abundances_std=0):
-    interactions = generate_pairwise_interactions(n, interaction_mean, interaction_std, sparcity)
-    ri = generate_growth_rates(n, growth_std)
+def generate_trajectories(n, maxtime, interactions, ri, starting_abundances):
     abundances = np.zeros((maxtime+1, n))
-    abundances[0] = generate_starting_abundances(n, abundances_mean, abundances_std)
-    
+    abundances[0] = starting_abundances
     time = 1
     while time < maxtime+1:
         for species in range(0, n):
@@ -71,7 +68,12 @@ def simulate(n, maxtime, interaction_mean=0.0, interaction_std=0.1, sparcity=0.1
             change = abundances[species]*change_per_capita
             abundances[time][species] = sum(abundances[species]+change)
         time += 1
-    
     return abundances
+
+def simulate(n, maxtime, interaction_mean=0.0, interaction_std=0.01, sparcity=0.1, growth_std=0.1, abundances_mean=10000, abundances_std=0):
+    interactions = generate_pairwise_interactions(n, interaction_mean, interaction_std, sparcity)
+    ri = generate_growth_rates(n, growth_std)
+    starting_abundances = generate_starting_abundances(n, abundances_mean, abundances_std)
+    return generate_trajectories(n, maxtime, interactions, ri, starting_abundances)
 
 print(simulate(3, 5))
