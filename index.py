@@ -29,6 +29,10 @@ for as many timepoints as desired.
 
 """
 
+#TODO separate birth and death rate in model
+#TODO take lag times into account
+#TODO add function for drawing trajectories
+
 def generate_growth_rates(n, std):
     ri = np.random.normal(loc=(1/n), scale=(1/n)*std, size=n)
     for i in range(0, len(ri)):
