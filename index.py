@@ -77,11 +77,17 @@ def generate_trajectories(n, maxtime, interactions, ri, starting_abundances):
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
+    unviable = False
     while time < maxtime+1:
         for species in range(0, n):
             change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
             change = abundances[species]*change_per_capita
             abundances[time][species] = sum(abundances[species]+change)
+            if abundances[time][species] <= 0:
+                unviable = True
+                break
+        if unviable:
+            return(-1)
         time += 1
     return abundances
 
@@ -90,5 +96,3 @@ def simulate(n, maxtime, interaction_mean=0.0, interaction_std=0.01, sparcity=0.
     ri = generate_growth_rates(n, growth_std)
     starting_abundances = generate_starting_abundances(n, abundances_mean, abundances_std)
     return generate_trajectories(n, maxtime, interactions, ri, starting_abundances)
-
-print(generate_higher_order_interactions(4, 4, 0.1, 0.2))
