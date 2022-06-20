@@ -26,6 +26,10 @@ with the mean 0.0 and where standard deviation can be chosen. Sparcity is introd
 by calling function add_sparcity. Selfinteractions are then set to negative values based on the
 originally drawn values.
 
+generate_trajectories: Generates bacteria abundances as a function of time based on generalized
+Lotka-Volterra dynamics. If abundance of some species drops to zero or below the community is
+deemed non-viable, the simulation aborts and returns "-1"
+
 simulate: Calls previous functions to set up the simulation. This data is then used to simulate
 species abundance trajectories with generalized Lotka-Volterra dynamics for all of the species
 for as many timepoints as desired.
