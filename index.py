@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from parameters import generate_growth_rates, generate_pairwise_interactions, generate_starting_abundances
 from trajectories import only_viable_trajectories
-from graphics import abundances_line_chart
+from graphics import abundances_line_chart, interactions_heatmap
 
 """Index for performing simulations based on generalized Lotka-Volterra dynamics. Calls appropriate
 functions for generating interaction values, starting abundances and for generating trajectories.
@@ -26,3 +26,4 @@ if abundances == -1:
     print("Community not viable")
 else:
     abundances_line_chart(n, maxtime, abundances)
+    interactions_heatmap(n, pairwise_interactions)
