@@ -25,8 +25,8 @@ originally drawn values.
 
 """
 
-def generate_growth_rates(n, std = 0.1):
-    ri = np.random.normal(loc=(1/n), scale=(1/n)*std, size=n)
+def generate_growth_rates(n, mean, std = 0.1):
+    ri = np.random.normal(loc=mean, scale=mean*std, size=n)
     for i in range(0, len(ri)):
         if ri[i] < 0:
             ri[i] = ri[i]*-1
