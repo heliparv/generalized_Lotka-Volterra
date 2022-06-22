@@ -56,7 +56,7 @@ def test_trajectories(n, maxtime, interactions, ri, starting_abundances):
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
-    while time < maxtime:
+    while time < maxtime+1:
         for species in range(0, n):
             change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
             new_abundance = abundances[time][species] + abundances[time-1][species]*change_per_capita
