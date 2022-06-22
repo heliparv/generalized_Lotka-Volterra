@@ -10,9 +10,9 @@ interactions heatmap: Draws a heatmap based on the given interactions between sp
 """
 
 def abundances_line_chart(n, maxtime, abundances):
-    y = range(0, maxtime+1)
+    x = range(0, maxtime+1)
     plt.figure()
-    plt.plot(abundances, y)
+    plt.plot(x, abundances)
     plt.xlabel("Time")
     plt.ylabel("Abundance")
     plt.legend(range(1,n+1), title="Species", loc="center left", fontsize='small', bbox_to_anchor=(1, 0.5))
