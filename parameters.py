@@ -32,8 +32,8 @@ def generate_growth_rates(n, std = 0.1):
             ri[i] = ri[i]*-1
     return ri
 
-def generate_starting_abundances(n, mean=10000, std=0):
-    abundances = np.random.normal(loc=mean, scale=std, size=n).astype(int)
+def generate_starting_abundances(n, mean=100, std=0):
+    abundances = np.random.normal(loc=mean, scale=mean*std, size=n).astype(int)
     for i in range(0, len(abundances)):
         if abundances[i] < 0:
             abundances[i] = abundances[i]*-1

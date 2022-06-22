@@ -6,7 +6,7 @@ The current model tends towards trajectories where species abundance dip quickly
 #### Instructions
 *index.py* contains the code needed for initiating a one-off simulation. Input desired parameters to functions and run program.
 
-*parameters.py* contains functions needed to create the initial values for the simulation, such as interactions between species and individual growth rates for species.
+*parameters.py* contains functions needed to create the initial values for the simulation, such as interactions between species and individual growth rates for species. In random draws the standard deviation values for pairwise interactions should be in absolute units as the default mean is 0, but for standard deviation in drawing starting abundances and intrinsic growth rates the value should be as a fraction of the mean, for example if mean is 100 CFU and wanted std is 10 CFU the input should be 0.1
 
 *trajectories.py* contains functions needed for carrying out the simulation with the generated initial values.
 
