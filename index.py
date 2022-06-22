@@ -17,15 +17,15 @@ n = 5
 #Maximum simulation time
 maxtime = 15
 
-ri = generate_growth_rates(n)
+ri = generate_growth_rates(n, 0.1, 0.1)
 
-starting_abundances = generate_starting_abundances(n)
+starting_abundances = generate_starting_abundances(n, 100, 0.1)
 
-pairwise_interactions = generate_pairwise_interactions(n)
+pairwise_interactions = generate_pairwise_interactions(n, 0, 0.0000001, 0.3)
 
 abundances = only_viable_trajectories(n, maxtime, pairwise_interactions, ri, starting_abundances)
 
-if abundances == -1:
+if len(abundances) == 1:
     print("Community not viable")
 else:
     abundances_line_chart(n, maxtime, abundances)
