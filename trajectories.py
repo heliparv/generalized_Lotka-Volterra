@@ -26,7 +26,7 @@ def only_viable_trajectories(n, maxtime, interactions, ri, starting_abundances):
     while time < maxtime+1:
         for species in range(0, n):
             change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
-            new_abundance = abundances[time][species] + abundances[time-1][species]*change_per_capita
+            new_abundance = abundances[time-1][species] + abundances[time-1][species]*change_per_capita
             if new_abundance <= 0:
                 unviable = True
                 break
@@ -44,7 +44,7 @@ def trajectories_with_extinction(n, maxtime, interactions, ri, starting_abundanc
     while time < maxtime+1:
         for species in range(0, n):
             change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
-            new_abundance = abundances[time][species] + abundances[time-1][species]*change_per_capita
+            new_abundance = abundances[time-1][species] + abundances[time-1][species]*change_per_capita
             if new_abundance < 0:
                 abundances[time][species] = 0
             else:
@@ -59,7 +59,7 @@ def test_trajectories(n, maxtime, interactions, ri, starting_abundances):
     while time < maxtime+1:
         for species in range(0, n):
             change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
-            new_abundance = abundances[time][species] + abundances[time-1][species]*change_per_capita
+            new_abundance = abundances[time-1][species] + abundances[time-1][species]*change_per_capita
             abundances[time][species] = new_abundance
         time += 1
     return abundances
