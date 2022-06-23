@@ -20,8 +20,11 @@ given array.
 generate_pairwise_interactions: Generates a matrix of pairwise interactions where rows are the
 affected species and columns the species affecting it. Interactions are drawn from a normal distribution
 with the mean 0.0 and where standard deviation can be chosen. Sparcity is introduced to the interactions
-by calling function add_sparcity. Selfinteractions are then set to negative values based on the
-originally drawn values.
+by calling function add_sparcity.
+
+adjust_selfinteractions: Takes generated pairwise interactions and adjusts the diagonal terms,
+the pairwise interactions, and replaces them with values drawn from a normal distribution with
+the given mean and standard deviation.
 
 """
 
@@ -56,8 +59,15 @@ def generate_pairwise_interactions(n, mean=0, std=0.01, sparcity=0.1):
 
     interactions_matrix = add_sparcity(interactions_matrix, sparcity)
 
-    for i in range(0,n):
-        if interactions_matrix[i][i] >= 0:
-            interactions_matrix[i][i] = -1*interactions_matrix[i][i]
-
     return interactions_matrix
+
+def adjust_selfinteractions(n, interactions, mean=-0.1, std=0.1):
+    selfinteractions = np.random.normal(loc=mean, scale=abs(mean*std), size=n)
+
+    for i in range(0,n):
+        if selfinteractions[i] >= 0:
+            interactions[i][i] = -1*selfinteractions[i]
+        else:
+            interactions[i][i] = selfinteractions[i]
+    
+    return interactions

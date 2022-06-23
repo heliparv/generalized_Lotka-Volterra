@@ -41,14 +41,20 @@ def trajectories_with_extinction(n, maxtime, interactions, ri, starting_abundanc
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
+    livespecies = list(range(0,n))
     while time < maxtime+1:
-        for species in range(0, n):
-            change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
-            new_abundance = abundances[time-1][species] + abundances[time-1][species]*change_per_capita
-            if new_abundance < 0:
-                abundances[time][species] = 0
+        i = 0
+        while i < len(livespecies):
+            print(livespecies)
+            print(i)
+            print(livespecies[i])
+            change_per_capita = ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+            new_abundance = abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita
+            if new_abundance <= 0:
+                del livespecies[i]
             else:
-                abundances[time][species] = new_abundance
+                abundances[time][livespecies[i]] = new_abundance
+                i+=1
         time += 1
     return abundances
 
