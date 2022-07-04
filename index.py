@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from parameters import generate_growth_rates, generate_pairwise_interactions, generate_starting_abundances, adjust_selfinteractions
-from trajectories import only_viable_trajectories, trajectories_with_extinction
+from trajectories import only_viable_trajectories, trajectories_with_extinction, test_trajectories
 from graphics import abundances_line_chart, interactions_heatmap
 
 """Index for performing simulations based on generalized Lotka-Volterra dynamics. Calls appropriate
@@ -13,11 +13,12 @@ mean is 100 CFU and desired std is 10 CFU the input should be 0.1
 """
 
 #Number of species
-n = 30
+n = 5
 #Maximum simulation time
-maxtime = 200
+maxtime = 1000
 
 ri = generate_growth_rates(n, 0.001, 0.1)
+ri = np.zeros(5)
 
 starting_abundances = generate_starting_abundances(n, 100, 0.1)
 
@@ -25,7 +26,10 @@ pairwise_interactions = generate_pairwise_interactions(n, 0, 0.00001, 0.3)
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.00002, 0.1)
 
-abundances = trajectories_with_extinction(n, maxtime, pairwise_interactions, ri, starting_abundances)
+pairwise_interactions = np.zeros((5,5))
 
+abundances = test_trajectories(n, maxtime, pairwise_interactions, ri, starting_abundances)
+
+print(abundances[-1])
 abundances_line_chart(n, maxtime, abundances)
 #interactions_heatmap(n, pairwise_interactions)
