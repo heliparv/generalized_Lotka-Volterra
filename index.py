@@ -13,20 +13,17 @@ mean is 100 CFU and desired std is 10 CFU the input should be 0.1
 """
 
 #Number of species
-n = 5
+n = 10
 #Maximum simulation time
-maxtime = 1000
+maxtime = 9000
 
 ri = generate_growth_rates(n, 0.001, 0.1)
-ri = np.zeros(5)
 
 starting_abundances = generate_starting_abundances(n, 100, 0.1)
 
-pairwise_interactions = generate_pairwise_interactions(n, 0, 0.00001, 0.3)
+pairwise_interactions = generate_pairwise_interactions(n, 0, 0.001, 0.3)
 
-pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.00002, 0.1)
-
-pairwise_interactions = np.zeros((5,5))
+pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.001, 0.1)
 
 abundances = test_trajectories(n, maxtime, pairwise_interactions, ri, starting_abundances)
 
