@@ -2,7 +2,7 @@
 Modelling (microbial) communities with generalized Lotka-Volterra dynamics. Two alternate forms of the equation are used, termed here as *simple gLV* and *gLV with carrying capacity* or *gLV with K*
 
 #### simple gLV
-[simple gLV equation](equations/simple_gLV.png)
+![simple gLV equation](equations/simple_gLV.png)
 Where:
 - i = species i in group of species
 - Ni = species i abundance
@@ -12,9 +12,9 @@ Where:
 - Bi<-jk = effect of species j and k on species i
 
 #### gLV with K
-[gLV with K](equations/gLV_with_K.png)
+![gLV with K](equations/gLV_with_K.png)
 Where Ki is maximum carrying capacity for species i and it can be found with equation:
-[define K](equations/def_K.png) 
+![define K](equations/def_K.png) 
 
 ### Instructions
 *index.py* contains the code needed for initiating a one-off simulation. Input desired parameters to functions and run program.
