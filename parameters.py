@@ -33,7 +33,7 @@ def generate_growth_rates(n, mean, std = 0.1):
     for i in range(0, len(ri)):
         if ri[i] < 0:
             ri[i] = ri[i]*-1
-    return ri
+    return np.around(ri, decimals=4)
 
 def generate_starting_abundances(n, mean=100, std=0):
     abundances = np.random.normal(loc=mean, scale=mean*std, size=n).astype(int)
@@ -55,14 +55,14 @@ def add_sparcity(array, sparcity):
     return array
 
 def generate_pairwise_interactions(n, mean=0, std=0.01, sparcity=0.1):
-    interactions_matrix = np.random.normal(loc=mean, scale=std, size=(n,n))
+    interactions_matrix = np.around((np.random.normal(loc=mean, scale=std, size=(n,n))), decimals=4)
 
     interactions_matrix = add_sparcity(interactions_matrix, sparcity)
 
     return interactions_matrix
 
 def adjust_selfinteractions(n, interactions, mean=-0.1, std=0.1):
-    selfinteractions = np.random.normal(loc=mean, scale=abs(mean*std), size=n)
+    selfinteractions = np.around((np.random.normal(loc=mean, scale=abs(mean*std), size=n)), decimals=4)
 
     for i in range(0,n):
         if selfinteractions[i] >= 0:
