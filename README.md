@@ -19,7 +19,9 @@ Where Ki is maximum carrying capacity for species i and it can be found with equ
 ![define K](equations/def_K.png) 
 
 ### Instructions
-*index.py* contains the code needed for initiating a one-off simulation. Input desired parameters to functions and run program.
+*index_simple_gLV.py* contains the code needed for initiating a one-off simulation or simple gLV. Input desired parameters to functions and run program.
+
+*index_gLVwK.py* contains the code needed for initiating a one-off simulation or gLV with K. Input desired parameters to functions and run program.
 
 *parameters.py* contains functions needed to create the initial values for the simulation, such as interactions between species and individual growth rates for species. In random draws the standard deviation values for pairwise interactions should be in absolute units as the default mean is 0, but for standard deviation in drawing starting abundances and intrinsic growth rates the value should be as a fraction of the mean, for example if mean is 100 CFU and wanted std is 10 CFU the input should be 0.1
 
@@ -30,7 +32,8 @@ Where Ki is maximum carrying capacity for species i and it can be found with equ
 ### Future developments for project
 - Fix issue with frequent overflows in simulation
 - Add simulation method for gLV with K
-- Model birth and death rates separately
+- Model birth and death rates separately in stead of ri
+- Take lag times into account
 - Third order interactions added to project
 - Generalized high-order interactions, order specified in the function call
 - Automate creating a dataset of set number of repeats with specified parameters

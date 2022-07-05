@@ -3,22 +3,19 @@ import numpy as np
 """ Functions used to create species trajectories as a function of time with Lotka-Volterra dynamics.
 
 functions:
-only_viable_trajectories: Generates bacteria abundances as a function of time based on generalized
+only_viable_gLVwK: Generates bacteria abundances as a function of time based on generalized
 Lotka-Volterra dynamics. If abundance of some species drops to zero or below the community is
 deemed non-viable, the simulation aborts and returns "-1"
 
-trajectories_with_extinction: Same as previous but when bacterial abundances run negative, function lets
+gLVwK_with_extinction: Same as previous but when bacterial abundances run negative, function lets
 species go extinct and continues simulation to given maximum time.
 
-test_trajectories: No control for negative or zero values, useful for testing how different starting
+test_gLVwK: No control for negative or zero values, useful for testing how different starting
 values affect the calculated abundances.
 
 """
 
-#TODO separate birth and death rate in model
-#TODO take lag times into account
-
-def only_viable_trajectories(n, maxtime, interactions, ri, starting_abundances):
+def only_viable_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abundances):
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
@@ -26,7 +23,7 @@ def only_viable_trajectories(n, maxtime, interactions, ri, starting_abundances):
     while time < maxtime+1:
         steady = True
         for species in range(0, n):
-            change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
+            change_per_capita = ri[species] * (1 + (sum(abundances[time-1]*interactions[species]))/carrying_capacities[species])
             if change_per_capita != 0 and steady:
                 steady = False
             new_abundance = abundances[time-1][species] + abundances[time-1][species]*change_per_capita
@@ -46,7 +43,7 @@ def only_viable_trajectories(n, maxtime, interactions, ri, starting_abundances):
         abundances[time+1:] = steady_abundances
     return abundances
 
-def trajectories_with_extinction(n, maxtime, interactions, ri, starting_abundances):
+def gLVwK_with_extinction(n, maxtime, interactions, ri, carrying_capacities, starting_abundances):
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
@@ -55,7 +52,7 @@ def trajectories_with_extinction(n, maxtime, interactions, ri, starting_abundanc
         i = 0
         steady = True
         while i < len(livespecies):
-            change_per_capita = ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+            change_per_capita = ri[i] * (1 + (sum(abundances[time-1]*interactions[i]))/carrying_capacities[i])
             if change_per_capita != 0 and steady:
                 steady = False
             new_abundance = abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita
@@ -73,17 +70,17 @@ def trajectories_with_extinction(n, maxtime, interactions, ri, starting_abundanc
         abundances[time+1:] = steady_abundances
     return abundances
 
-def test_trajectories(n, maxtime, interactions, ri, starting_abundances):
+def test_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abundances):
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
     while time < maxtime+1:
         steady = True
         for species in range(0, n):
-            change_per_capita = ri[species] + np.around(sum((abundances[time-1]*interactions[species])), decimals = 7)
+            change_per_capita = ri[species] * (1 + (sum(abundances[time-1]*interactions[species]))/carrying_capacities[species])
             if change_per_capita != 0 and steady:
                 steady = False
-            new_abundance = abundances[time-1][species] + np.around((abundances[time-1][species]*change_per_capita), decimals = 7)
+            new_abundance = abundances[time-1][species] + int(np.around((abundances[time-1][species]*change_per_capita), decimals = 9))
             abundances[time][species] = new_abundance
         if steady:
             break

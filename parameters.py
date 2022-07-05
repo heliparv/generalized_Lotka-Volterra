@@ -71,3 +71,10 @@ def adjust_selfinteractions(n, interactions, mean=-0.1, std=0.1):
             interactions[i][i] = selfinteractions[i]
     
     return interactions
+
+def calculate_carrying_capacities(ri, interactions):
+    carrying_capacities = []
+    for i in range(0, len(ri)):
+        carrying_capacities.append(-ri[i]/interactions[i][i])
+    
+    return np.array(carrying_capacities)
