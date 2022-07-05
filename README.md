@@ -13,7 +13,9 @@ Where:
 
 #### gLV with K
 ![gLV with K](equations/gLV_with_K.png)
+
 Where Ki is maximum carrying capacity for species i and it can be found with equation:
+
 ![define K](equations/def_K.png) 
 
 ### Instructions
