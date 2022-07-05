@@ -80,10 +80,10 @@ def test_trajectories(n, maxtime, interactions, ri, starting_abundances):
     while time < maxtime+1:
         steady = True
         for species in range(0, n):
-            change_per_capita = np.around((ri[species] + sum(abundances[time-1]*interactions[species])), decimals=20)
+            change_per_capita = ri[species] + np.around(sum((abundances[time-1]*interactions[species])), decimals = 7)
             if change_per_capita != 0 and steady:
                 steady = False
-            new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=20)
+            new_abundance = abundances[time-1][species] + np.around((abundances[time-1][species]*change_per_capita), decimals = 7)
             abundances[time][species] = new_abundance
         if steady:
             break

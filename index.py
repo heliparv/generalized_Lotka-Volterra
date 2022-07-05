@@ -13,11 +13,11 @@ mean is 100 CFU and desired std is 10 CFU the input should be 0.1
 """
 
 #Number of species
-n = 10
+n = 30
 #Maximum simulation time
-maxtime = 9000
+maxtime = 2000
 
-ri = generate_growth_rates(n, 0.001, 0.1)
+ri = generate_growth_rates(n, 0.5, 0.1)
 
 starting_abundances = generate_starting_abundances(n, 100, 0.1)
 
