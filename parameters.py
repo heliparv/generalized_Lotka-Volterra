@@ -34,9 +34,14 @@ generate_abundance_call: When modelling higher order interactions the calculated
 the effected species depends on the abundances of all the effector species. The call vector is created
 for a convenient way to calculate the product of the appropriate abundances at each step so that
 this vector can be used in the way a vector of single species abundances is used with pairwise interactions.
+Doesn't allow for a species to be represented twice in an interaction as an effector, but the model doesn't
+control for interactions to be zero if the affected species is one of the effectors
 
-calculate_carrying_capacities: Calculates the maximum carrying capacities for bacteria
-in the gLV with K model, relates intrinsic growth rate to self-interaction
+generate_abundance_call_With_repeats: Same as previous function, but allows for the same species to be
+repeated in the call for an arbitrary number of times.
+
+calculate_carrying_capacities: Calculates the maximum carrying capacities for bacteria in the gLV with K
+model, relates intrinsic growth rate to self-interaction
 
 """
 
@@ -68,7 +73,7 @@ def add_sparcity(array, sparcity):
 
 def generate_interactions(n, order, mean=0, std=0.1, sparcity=0.1):
     columns = comb(n, order)
-    interactions = np.around((np.random.normal(loc=mean, scale=std, size=(n,columns))), decimals=4)
+    interactions = np.around((np.random.normal(loc=mean, scale=std, size=(n,columns))), decimals=8)
     interactions = add_sparcity(interactions, sparcity)
     return interactions
 
@@ -88,6 +93,15 @@ def generate_abundance_call(species_list, available_species, choose):
         table = []
         for i in range(0, len(available_species)-choose+1):
             table = table + generate_abundance_call(species_list+[available_species[i]], available_species[i+1:], choose-1)
+        return table
+
+def generate_abundance_call_with_repeats(species_list, available_species, choose):
+    if choose == 0:
+        return [species_list]
+    else:
+        table = []
+        for i in range(0, len(available_species)-choose+1):
+            table = table + generate_abundance_call_with_repeats(species_list+[available_species[i]], available_species[i:], choose-1)
         return table
 
 def calculate_carrying_capacities(ri, interactions):

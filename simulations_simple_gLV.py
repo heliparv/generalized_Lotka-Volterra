@@ -1,9 +1,9 @@
 import numpy as np
 
 """ Functions used to create species trajectories as a function of time with Lotka-Volterra dynamics.
-All functions test for achieving steady state and if there's no change to any of the abundances during
-a simulation round the simulation is interrupted and steady state abundances are filled in for the
-remainder of the simulation time.
+Only pairwise interactions. All functions test for achieving steady state and if there's no change
+to any of the abundances during a simulation round the simulation is interrupted and steady state
+abundances are filled in for the remainder of the simulation time.
 
 functions:
 only_viable_simple_gLV: Generates bacteria abundances as a function of time based on generalized
@@ -18,9 +18,6 @@ in stead of abundances.
 test_simple_gLV: No control for negative or zero values, useful for testing how different starting
 values affect the calculated abundances. If overflow encountered, prints out values causing overflow
 and returns abundances calculated so far.
-
-calculate_abundance_product_vector: calculates the product of abundances according to the call vector
-created for modelling higher order interactions in the model
 
 """
 
@@ -122,10 +119,3 @@ def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
         steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
         abundances[time+1:] = steady_abundances
     return abundances
-
-def calculate_abundance_product_vector(call, abundances):
-    product = np.ones(len(call))
-    for i in range(0, len(call)):
-        for j in call[i]:
-            product[i] = product[i]*abundances[j]
-    return product
