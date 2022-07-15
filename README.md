@@ -1,6 +1,8 @@
 # generalized Lotka-Volterra modelling
 Modelling (microbial) communities with generalized Lotka-Volterra dynamics. Two alternate forms of the equation are used, termed here as *simple gLV* and *gLV with carrying capacity* or *gLV with K*
 
+The current simulations are temperamental and especially adding the higher-order interactions results in overflow in most cases.
+
 #### simple gLV
 ![simple gLV equation](equations/simple_gLV.png)
 Where:
