@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from parameters import generate_growth_rates, generate_pairwise_interactions, generate_starting_abundances, adjust_selfinteractions
-from trajectories import only_viable_trajectories, trajectories_with_extinction, test_trajectories
+from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions
+from simulations_simple_gLV import test_simple_gLV, only_viable_simple_gLV, simple_gLV_with_extinction
 from graphics import abundances_line_chart, interactions_heatmap
 from GLV_steady_state_calculator import steady_state_glv
 
@@ -11,21 +11,21 @@ as starting values for the model
 """
 
 #Number of species
-n = 20
+n = 3
 #Maximum simulation time
-maxtime = 7000
+maxtime = 100
 
-ri = generate_growth_rates(n, 0.001, 0.1)
+ri = generate_growth_rates(n, 0.05, 0.1)
 
-pairwise_interactions = generate_pairwise_interactions(n, 0, 0.00001, 0.3)
+pairwise_interactions = generate_interactions(n, 1, 0.01, 0.3)
 
-pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.00002, 0.1)
+pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.2, 0.1)
 
 steady_state_abundances = steady_state_glv(n, ri, pairwise_interactions)
 
-#abundances = test_trajectories(n, maxtime, pairwise_interactions, ri, steady_state_abundances)
+abundances = test_simple_gLV(n,maxtime, pairwise_interactions, ri, steady_state_abundances)
 
 print(steady_state_abundances)
-#print(abundances[-1])
-#abundances_line_chart(n, maxtime, abundances)
-#interactions_heatmap(n, pairwise_interactions)
+print(abundances[-1])
+abundances_line_chart(n, maxtime, abundances)
+interactions_heatmap(n, pairwise_interactions)
