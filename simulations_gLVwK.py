@@ -34,7 +34,7 @@ def only_viable_gLVwK(n, maxtime, interactions, ri, carrying_capacities, startin
         steady = True
         for species in range(0, n):
             try:
-                change_per_capita = ri[species] * (1 + (sum(abundances[time-1]*interactions[species]))/carrying_capacities[species])
+                change_per_capita = ri[species] *((carrying_capacities[species]-abundances[time-1][species])/carrying_capacities[species])+ (sum(abundances[time-1]*interactions[species]))
                 if change_per_capita != 0 and steady:
                     steady = False
                 new_abundance = abundances[time-1][species] + int(abundances[time-1][species]*change_per_capita)
@@ -67,7 +67,7 @@ def gLVwK_with_extinction(n, maxtime, interactions, ri, carrying_capacities, sta
         steady = True
         while i < len(livespecies):
             try:
-                change_per_capita = ri[i] * (1 + (sum(abundances[time-1]*interactions[i]))/carrying_capacities[i])
+                change_per_capita = ri[livespecies[i]] *((carrying_capacities[livespecies[i]]-abundances[time-1][livespecies[i]])/carrying_capacities[livespecies[i]])+ (sum(abundances[time-1]*interactions[livespecies[i]]))
                 if change_per_capita != 0 and steady:
                     steady = False
                 new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita)
@@ -96,7 +96,7 @@ def test_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abund
         steady = True
         for species in range(0, n):
             try:
-                change_per_capita = ri[species] * (1 + (sum(abundances[time-1]*interactions[species]))/carrying_capacities[species])
+                change_per_capita = ri[species] *((carrying_capacities[species]-abundances[time-1][species])/carrying_capacities[species])+ (sum(abundances[time-1]*interactions[species]))
             except:
                 print(f"Time: {time}")
                 print(f"species: {species}")

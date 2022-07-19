@@ -13,7 +13,7 @@ mean is 100 CFU and desired std is 10 CFU the input should be 0.1
 """
 
 #Number of species
-n = 6
+n = 10
 #Maximum simulation time
 maxtime = 100
 
@@ -27,7 +27,7 @@ pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.001
 
 carrying_capacities = calculate_carrying_capacities(ri, pairwise_interactions)
 
-abundances = test_gLVwK(n, maxtime, pairwise_interactions, ri, carrying_capacities, starting_abundances)
+abundances = only_viable_gLVwK(n, maxtime, pairwise_interactions, ri, carrying_capacities, starting_abundances)
 
 if type(abundances) == int:
     if abundances == -1:
