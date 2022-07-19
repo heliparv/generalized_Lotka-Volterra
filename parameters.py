@@ -109,3 +109,16 @@ def calculate_carrying_capacities(ri, interactions):
     for i in range(0, len(ri)):
         carrying_capacities.append(np.around((-ri[i]/interactions[i][i]),decimals=4))
     return np.array(carrying_capacities)
+
+
+
+
+
+
+def generate_interactions_HO(n, order, mean=0, std=0.1, sparcity=0.1):
+    columns = list(permutations(range(1,n), order))
+    col_len=len(columns)
+    interactions = np.around((np.random.normal(loc=mean, scale=std, size=(n,col_len))), decimals=8)
+    inter=pd.DataFrame(interactions, columns=columns)
+    inter = add_sparcity(inter, sparcity)
+    return inter
