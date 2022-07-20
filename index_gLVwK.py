@@ -17,6 +17,7 @@ mean is 100 CFU and desired std is 10 CFU the input should be 0.1
 n = 10
 #Maximum simulation time
 maxtime = 100
+total_carrying_capacity = 20000000
 
 ri = generate_growth_rates(n, 0.5, 0.1)
 
@@ -30,7 +31,7 @@ pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.001
 
 carrying_capacities = calculate_carrying_capacities(ri, pairwise_interactions)
 
-abundances = only_viable_gLVwK(n, maxtime, pairwise_interactions, ri, carrying_capacities, starting_abundances)
+abundances = gLVwK_with_extinction(n, maxtime, pairwise_interactions, ri, carrying_capacities, starting_abundances, total_carrying_capacity)
 
 if type(abundances) == int:
     if abundances == -1:

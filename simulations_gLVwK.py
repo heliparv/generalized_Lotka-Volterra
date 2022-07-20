@@ -24,7 +24,7 @@ created for modelling higher order interactions in the model
 
 """
 
-def only_viable_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abundances):
+def only_viable_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abundances, total_carrying_capacity):
     np.seterr(all='raise')
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
@@ -32,9 +32,11 @@ def only_viable_gLVwK(n, maxtime, interactions, ri, carrying_capacities, startin
     nonviable = False
     while time < maxtime+1:
         steady = True
+        total_carrying_limit = (total_carrying_capacity-sum(abundances[time-1]))/total_carrying_capacity
         for species in range(0, n):
             try:
-                change_per_capita = ri[species] *((carrying_capacities[species]-abundances[time-1][species])/carrying_capacities[species])+ (sum(abundances[time-1]*interactions[species]))
+                change_per_capita = ri[species]*((carrying_capacities[species]-abundances[time-1][species])/carrying_capacities[species])+ (sum(abundances[time-1]*interactions[species]))
+                change_per_capita = total_carrying_limit*change_per_capita
                 if change_per_capita != 0 and steady:
                     steady = False
                 new_abundance = abundances[time-1][species] + int(abundances[time-1][species]*change_per_capita)
@@ -56,7 +58,7 @@ def only_viable_gLVwK(n, maxtime, interactions, ri, carrying_capacities, startin
         abundances[time+1:] = steady_abundances
     return abundances
 
-def gLVwK_with_extinction(n, maxtime, interactions, ri, carrying_capacities, starting_abundances):
+def gLVwK_with_extinction(n, maxtime, interactions, ri, carrying_capacities, starting_abundances, total_carrying_capacity):
     np.seterr(all='raise')
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
@@ -65,9 +67,11 @@ def gLVwK_with_extinction(n, maxtime, interactions, ri, carrying_capacities, sta
     while time < maxtime+1:
         i = 0
         steady = True
+        total_carrying_limit = (total_carrying_capacity-sum(abundances[time-1]))/total_carrying_capacity
         while i < len(livespecies):
             try:
-                change_per_capita = ri[livespecies[i]] *((carrying_capacities[livespecies[i]]-abundances[time-1][livespecies[i]])/carrying_capacities[livespecies[i]])+ (sum(abundances[time-1]*interactions[livespecies[i]]))
+                change_per_capita = ri[livespecies[i]]*((carrying_capacities[livespecies[i]]-abundances[time-1][livespecies[i]])/carrying_capacities[livespecies[i]])+ (sum(abundances[time-1]*interactions[livespecies[i]]))
+                change_per_capita = total_carrying_limit*change_per_capita
                 if change_per_capita != 0 and steady:
                     steady = False
                 new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita)
@@ -87,22 +91,25 @@ def gLVwK_with_extinction(n, maxtime, interactions, ri, carrying_capacities, sta
         abundances[time+1:] = steady_abundances
     return abundances
 
-def test_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abundances):
+def test_gLVwK(n, maxtime, interactions, ri, carrying_capacities, starting_abundances, total_carrying_capacity):
     np.seterr(all='raise')
     abundances = np.zeros((maxtime+1, n))
     abundances[0] = starting_abundances
     time = 1
     while time < maxtime+1:
         steady = True
+        total_carrying_limit = (total_carrying_capacity-sum(abundances[time-1]))/total_carrying_capacity
         for species in range(0, n):
             try:
                 change_per_capita = ri[species] *((carrying_capacities[species]-abundances[time-1][species])/carrying_capacities[species])+ (sum(abundances[time-1]*interactions[species]))
+                change_per_capita = total_carrying_limit*change_per_capita
             except:
                 print(f"Time: {time}")
                 print(f"species: {species}")
                 print(f"abundances t-1: {abundances[time-1]}")
                 print(f"interactions: {interactions[species]}")
                 print(f"Carrying capasity: {carrying_capacities[species]}")
+                print(f"total carrying limit: {total_carrying_limit}")
                 return abundances
             if change_per_capita != 0 and steady:
                 steady = False
