@@ -4,6 +4,7 @@ from scipy.stats import bernoulli
 from math import comb
 import random
 from itertools import permutations
+from random import shuffle, sample
 #from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions
 
 """ 
