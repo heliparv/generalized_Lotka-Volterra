@@ -8,13 +8,17 @@ from random import shuffle, sample
 #from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions
 
 """ 
-even_groups_for_rps: Takes input of number of species and number of groups, which is the cycle size
-in the cyclic dynamics and randomly divides the species to approximately equal group sizes
+drop_species_from_rps: Add sparcity to the rps model.Takes input of number of species and desired
+sparcity. If given sparcity is lower than 1, it is used as a fraction, otherwise it's assumed to
+be number of species dropped.
 
-random_groups_for_rps: Takes input of number of species and number of groups, which is the cycle size
-in the cyclic dynamics. Randomly assigns each species to one of the groups.
+even_groups_for_rps: Takes input of a list of species to choose from after sparcity function used on
+the species group and number of groups, which is the cycle size in the cyclic dynamics. Randomly
+divides the species to approximately equal group sizes
 
-drop_species_from_rps: Add sparcity to the rps model
+random_groups_for_rps: Takes input of a list of species to choose from after sparcity function used on
+the species group and number of groups, which is the cycle size in the cyclic dynamics. Randomly assigns
+each species to one of the groups.
 
 """
 
@@ -36,10 +40,17 @@ def rpsls(pairwise_interactions,mean=0, std=0.1):
             pairwise_interactions[k,j]=-abs(pairwise_interactions[k,j])
             pairwise_interactions[j,k]=-(pairwise_interactions[k,j])
     return pairwise_interactions                                           
-         
-def even_groups_for_rps(n, groups):
+
+def drop_species_from_rps(n, sparcity):
+    if sparcity < 1:
+        keep = int(n*(1-sparcity))
+    else:
+        keep = n-sparcity
+    return sample(range(n), keep)
+
+def even_groups_for_rps(species, groups):
+    n = len(species)
     group_size = int(n/groups)
-    species = list(range(n))
     shuffle(species)
     grouping = [species[i:i+group_size] for i in range(0, n, group_size)]
     group_dict = {}
@@ -52,9 +63,9 @@ def even_groups_for_rps(n, groups):
             group_dict[j] = i
     return group_dict
 
-def random_groups_for_rps(n, groups):
+def random_groups_for_rps(species, groups):
     group_dict = {}
-    for i in range(n):
+    for i in species:
         group_dict[i] = sample(range(groups),1)
     return group_dict
 
