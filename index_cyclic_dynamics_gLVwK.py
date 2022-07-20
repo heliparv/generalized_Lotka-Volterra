@@ -1,15 +1,21 @@
 import numpy as np
 import pandas as pd
 from parameters import add_sparcity, generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, calculate_carrying_capacities
+from Cyclic_games import generalized_rps, even_groups_for_rps, random_groups_for_rps
 from simulations_gLVwK import only_viable_gLVwK, gLVwK_with_extinction, test_gLVwK
 from graphics import abundances_line_chart, interactions_heatmap
 
-"""Index for performing simulations based on generalized Lotka-Volterra dynamics. Calls appropriate
-functions for generating interaction values, starting abundances and for generating trajectories.
+"""Index for performing simulations based on generalized Lotka-Volterra dynamics with carrying
+capacity caps and cyclic dynamics. Calls appropriate functions for generating interaction values,
+starting abundances and for generating trajectories.
+
 To modify simulations, modify input values for functions. Standard deviation input for generating
 interactions should be in the desired range, but for generating intrinsic growth rates and pairwise
 interactions the standard deviation input should be as a fraction of the given mean. For example if
 mean is 100 CFU and desired std is 10 CFU the input should be 0.1
+
+For cyclic dynamics choose input function for the way species are grouped as either
+even_groups_for_rps or random_groups_for_rps
 """
 
 #Number of species
@@ -25,6 +31,8 @@ starting_abundances = generate_starting_abundances(n, 100, 0.1)
 pairwise_interactions = generate_interactions(n, 1, 0, 0.001)
 
 pairwise_interactions = add_sparcity(pairwise_interactions, 0.3)
+
+pairwise_interactions = generalized_rps(pairwise_interactions, 6, 2, 0.2, even_groups_for_rps)
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.001, 0.1)
 
