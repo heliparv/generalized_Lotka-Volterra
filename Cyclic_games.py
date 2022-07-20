@@ -14,6 +14,8 @@ in the cyclic dynamics and randomly divides the species to approximately equal g
 random_groups_for_rps: Takes input of number of species and number of groups, which is the cycle size
 in the cyclic dynamics. Randomly assigns each species to one of the groups.
 
+drop_species_from_rps: Add sparcity to the rps model
+
 """
 
 def rpsls(pairwise_interactions,mean=0, std=0.1): 
@@ -36,18 +38,23 @@ def rpsls(pairwise_interactions,mean=0, std=0.1):
     return pairwise_interactions                                           
          
 def even_groups_for_rps(n, groups):
-    group_size, extras = divmod(n, groups)
-    choice = list(range(n))
-    shuffle(choice)
-    grouping = list(choice[i*group_size+min(i, extras):(i+1)*group_size+min(i+1, extras)] for i in range(groups))
+    group_size = int(n/groups)
+    species = list(range(n))
+    shuffle(species)
+    grouping = [species[i:i+group_size] for i in range(0, n, group_size)]
     group_dict = {}
+    if n%groups != 0:
+        extras = grouping.pop(-1)
+        for i in extras:
+            group_dict[i] = sample(range(groups),1)[0]
     for i in range(groups):
         for j in grouping[i]:
             group_dict[j] = i
-    return grouping
+    return group_dict
 
 def random_groups_for_rps(n, groups):
     group_dict = {}
     for i in range(n):
         group_dict[i] = sample(range(groups),1)
     return group_dict
+
