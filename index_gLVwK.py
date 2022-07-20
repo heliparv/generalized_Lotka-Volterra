@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, calculate_carrying_capacities
+from slugify import add_uppercase_char
+from parameters import add_sparcity, generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, calculate_carrying_capacities
 from simulations_gLVwK import only_viable_gLVwK, gLVwK_with_extinction, test_gLVwK
 from graphics import abundances_line_chart, interactions_heatmap
 
@@ -21,7 +22,9 @@ ri = generate_growth_rates(n, 0.5, 0.1)
 
 starting_abundances = generate_starting_abundances(n, 100, 0.1)
 
-pairwise_interactions = generate_interactions(n, 1, 0, 0.001, 0.3)
+pairwise_interactions = generate_interactions(n, 1, 0, 0.001)
+
+pairwise_interactions = add_sparcity(pairwise_interactions, 0.3)
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.001, 0.1)
 
