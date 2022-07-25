@@ -19,6 +19,11 @@ test_simple_gLV: No control for negative or zero values, useful for testing how 
 values affect the calculated abundances. If overflow encountered, prints out values causing overflow
 and returns abundances calculated so far.
 
+stochastic_simple_gLV_with_extinction: does the same thing as the simple_gLV_with_extinction above, except
+that now it includes fluctuations that are dependent on the sigma vector and dW (note dW is sampled as is, 
+because the time step in the simulations is dt=1, otherwise it would have a different value). These fluctuations are
+added while updating abundances.
+
 """
 
 def only_viable_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
@@ -111,6 +116,38 @@ def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
                 print(f"Abundance t-1: {abundances[time-1][species]}")
                 print(f"Change per capita: {change_per_capita}")
                 return abundances
+        if steady:
+            break
+        else:
+            time += 1
+    if steady and time != maxtime:
+        steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+        abundances[time+1:] = steady_abundances
+    return abundances
+
+def stochastic_simple_gLV_with_extinction(n, maxtime, interactions, ri, starting_abundances, sigma):
+    np.seterr(all='raise')
+    abundances = np.zeros((maxtime+1, n))
+    abundances[0] = starting_abundances
+    time = 1
+    livespecies = list(range(0,n))
+    while time < maxtime+1:
+        i = 0
+        steady = True
+        while i < len(livespecies):
+            try:
+                change_per_capita = ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+                if change_per_capita != 0 and steady:
+                    steady = False
+                dW = np.random.random() - np.random.random()
+                new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita) + int(np.sqrt(abundances[time-1][livespecies[i]]*sigma[livespecies[i]])*dW)
+            except:
+                return -2
+            if new_abundance <= 0:
+                del livespecies[i]
+            else:
+                abundances[time][livespecies[i]] = new_abundance
+                i+=1
         if steady:
             break
         else:
