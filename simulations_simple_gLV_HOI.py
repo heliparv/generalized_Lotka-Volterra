@@ -168,3 +168,35 @@ def calculate_abundance_product_vector(call, abundances):
             except:
                 return -1
     return product
+
+def stochastic_simple_gLV_with_extinction(n, maxtime, interactions, ri, starting_abundances, sigma):
+    np.seterr(all='raise')
+    abundances = np.zeros((maxtime+1, n))
+    abundances[0] = starting_abundances
+    time = 1
+    livespecies = list(range(0,n))
+    while time < maxtime+1:
+        i = 0
+        steady = True
+        while i < len(livespecies):
+            try:
+                change_per_capita = ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+                if change_per_capita != 0 and steady:
+                    steady = False
+                dW = np.random.random() - np.random.random()
+                new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita) + int(np.sqrt(abundances[time-1][livespecies[i]]*sigma[livespecies[i]])*dW)
+            except:
+                return -2
+            if new_abundance <= 0:
+                del livespecies[i]
+            else:
+                abundances[time][livespecies[i]] = new_abundance
+                i+=1
+        if steady:
+            break
+        else:
+            time += 1
+    if steady and time != maxtime:
+        steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+        abundances[time+1:] = steady_abundances
+    return abundances
