@@ -6,16 +6,16 @@ from simulations_gLVwK import only_viable_gLVwK, gLVwK_with_extinction, test_gLV
 from graphics import abundances_line_chart, interactions_heatmap
 
 """Index for performing simulations based on generalized Lotka-Volterra dynamics with carrying
-capacity caps and cyclic dynamics. Calls appropriate functions for generating interaction values,
-starting abundances and for generating trajectories.
+capacity caps and cyclic games in the interactions. Calls appropriate functions for generating
+interaction values, starting abundances and for generating trajectories.
 
 To modify simulations, modify input values for functions. Standard deviation input for generating
 interactions should be in the desired range, but for generating intrinsic growth rates and pairwise
 interactions the standard deviation input should be as a fraction of the given mean. For example if
 mean is 100 CFU and desired std is 10 CFU the input should be 0.1
 
-For cyclic dynamics choose input function for the way species are grouped as either
-even_groups_for_rps or random_groups_for_rps
+For cyclic games with function generalized_rps choose input function for the way species are grouped
+as either even_groups_for_rps or random_groups_for_rps
 """
 
 #Number of species
@@ -32,7 +32,7 @@ pairwise_interactions = generate_interactions(n, 1, 0, 0.001)
 
 pairwise_interactions = add_sparcity(pairwise_interactions, 0.3)
 
-pairwise_interactions = generalized_rps(pairwise_interactions, 6, 2, 0.2, even_groups_for_rps)
+pairwise_interactions = generalized_rps(pairwise_interactions, 6, 2, even_groups_for_rps, 0.2, 0.1)
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.001, 0.1)
 

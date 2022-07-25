@@ -8,11 +8,15 @@ from random import shuffle, sample
 #from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions
 
 """ 
-generalized_rps: Creates cyclic dynamics in the given matrix of pairwise interactions according to
-the given specifications. Input groups is the maximum size of cycles, distance is the maximum
-distance along the cycle with which species can interact and sparcity describes the number or
-fraction of species left outside of the simulation. grouping_function is input of either
-even_groups_for_rps or random_groups_for_rps depending on the desired way the species are grouped.
+generalized_rps: Creates cyclic games in the given matrix of pairwise interactions according to
+the given specifications. Input groups is the maximum size of cycles of interaction chains,
+distance is the maximum distance along the cycle with which species can interact, sparcity
+describes the number or fraction of species left outside of the simulation. grouping_function is
+input of either even_groups_for_rps or random_groups_for_rps depending on the desired way the species
+are grouped. Between to species the interactions are chosen so that the effect on winner is the absolute
+value of the interaction in the original interactions matrix and for the loser the interction is either
+the same value but negative or if interaction_std has been given the interaction strenght is drawn from
+a normal distribution centered on the winner's interaction.
 
 drop_species_from_rps: Add sparcity to the rps model.Takes input of number of species and desired
 sparcity. If given sparcity is lower than 1, it is used as a fraction, otherwise it's assumed to
@@ -47,10 +51,9 @@ def rpsls(pairwise_interactions,mean=0, std=0.1):
             pairwise_interactions[j,k]=-(pairwise_interactions[k,j])
     return pairwise_interactions                                           
 
-def generalized_rps(pairwise_interactions, groups_total, distance, sparcity, grouping_function):
-    #There's still something funky about this, but it mostly gives a symmetric interactions matrix, I'll get back to it - Heli
+def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, sparcity=0, interaction_std=0):
     n = len(pairwise_interactions[0])
-    chosen_species = drop_species_from_rps(n, sparcity)
+    chosen_species = choose_species_rps(n, sparcity)
     grouping = grouping_function(chosen_species, groups_total)
 
     for winner_group in range(groups_total):
@@ -62,12 +65,13 @@ def generalized_rps(pairwise_interactions, groups_total, distance, sparcity, gro
         for winner in grouping[winner_group]:
             for group in loser_groups:
                 for loser in grouping[group]:
-                    pairwise_interactions[winner][loser] = abs(pairwise_interactions[winner][loser])
-                    pairwise_interactions[loser][winner] = -pairwise_interactions[winner][loser] 
+                    interaction = abs(pairwise_interactions[winner][loser])
+                    pairwise_interactions[winner][loser] = interaction
+                    pairwise_interactions[loser][winner] = -abs(np.random.normal(loc=interaction, scale=interaction*interaction_std))
 
     return pairwise_interactions
 
-def drop_species_from_rps(n, sparcity):
+def choose_species_rps(n, sparcity):
     if sparcity < 1:
         keep = int(n*(1-sparcity))
     else:
