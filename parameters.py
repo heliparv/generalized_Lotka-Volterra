@@ -110,3 +110,7 @@ def calculate_carrying_capacities(ri, interactions):
         carrying_capacities.append(np.around((-ri[i]/interactions[i][i]),decimals=4))
     return np.array(carrying_capacities)
 
+def generate_sigma(n, mean=0.1, std=1):
+    sigma = np.abs(np.random.normal(loc=mean, scale=abs(mean*std), size=n))
+    return np.around(sigma, decimals=4)
+
