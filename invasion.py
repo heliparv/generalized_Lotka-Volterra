@@ -34,7 +34,7 @@ to the ET_calculator above, together with the final abundances after each invasi
 ### INVASION FUNCTIONS ###
 
 def r_mutant_calculator(loo_interactions, loo_equilibrium_abundances, mutant_position):
-    r_mutant = sum((-1/loo_equilibrium_abundances[mutant_position])*(loo_interactions[mutant_position]*loo_equilibrium_abundances))
+    r_mutant = (-1)*sum(loo_interactions[mutant_position]*loo_equilibrium_abundances)
     return r_mutant
 
 def invasion(n, maxtime, ri, starting_abundances, pairwise_interactions, sigma, mutant):
