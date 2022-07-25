@@ -2,15 +2,19 @@ import numpy as np
 from scipy.linalg import solve as slv
 from scipy.stats import bernoulli
 
-"""steady_state_glv: Function finds a single steady state for a generalized Lotka-Volterra model with only
-pairwise interactions when model parameters are given as an input
-loo_steady_state_glv: Function finds single steady states for all leave-one-out cultures for
-a generalized Lotka-Volterra model with only pairwise interactions when model parameters are given
+"""steady_state_glv: Function finds a single steady state for a generalized Lotka-Volterra
+model with only pairwise interactions when model parameters are given as an input
+loo_steady_state_glv: Function finds single steady states for all leave-one-out cultures
+for a generalized Lotka-Volterra model with only pairwise interactions when model parameters
+are given
 
 Inputs:
 n = number of species
 ri = intrinsic rate of growth for each species, a numpy vector
 ineractions_matrix = matrix of pairwise interactions in the system
+
+check_steady_state_viable: Checks that given parameters have nonnegative abundances on gLV
+steady state solver
 """
 
 def steady_state_glv(n, ri, interactions_matrix):
@@ -27,3 +31,9 @@ def loo_steady_state_glv(n, ri, interactions_matrix):
         loo_abundances[i] = abund
     
     return loo_abundances
+
+def check_steady_state_viable(n, ri, interactions_matrix):
+    abundances = steady_state_glv(n, ri, interactions_matrix)
+    if sum(abundances<=0) == 0:
+        return True
+    return False
