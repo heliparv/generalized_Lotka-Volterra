@@ -26,9 +26,8 @@ adjust_selfinteractions: Takes generated pairwise interactions and adjusts the d
 the pairwise interactions, and replaces them with values drawn from a normal distribution with
 the given mean and standard deviation.
 
-generate_higher_order_interactions: Generates a matrix of higher order interactions of order specified
-in input, rows are the affected species and columns the species combinations effecting it. Interactions
-are drawn from a normal distribution and sparcity is introduced by calling function add_sparcity.
+generate_loo_interaction_matrices: Takes a pairwise interactions matrix and return a list
+of interactions matrices for leave-one-out simulations
 
 generate_abundance_call: When modelling higher order interactions the calculated effect of species on
 the effected species depends on the abundances of all the effector species. The call vector is created
@@ -37,7 +36,7 @@ this vector can be used in the way a vector of single species abundances is used
 Doesn't allow for a species to be represented twice in an interaction as an effector, but the model doesn't
 control for interactions to be zero if the affected species is one of the effectors
 
-generate_abundance_call_With_repeats: Same as previous function, but allows for the same species to be
+generate_abundance_call_with_repeats: Same as previous function, but allows for the same species to be
 repeated in the call for an arbitrary number of times.
 
 calculate_carrying_capacities: Calculates the maximum carrying capacities for bacteria in the gLV with K
@@ -85,6 +84,15 @@ def adjust_selfinteractions(n, interactions, mean=-0.1, std=0.1):
         else:
             interactions[i][i] = selfinteractions[i]
     return interactions
+
+def generate_loo_interaction_matrices(interactions):
+    n = len(interactions[0])
+    loo_interactions = []
+    for i in range(0, n):
+        temp_interactions = np.delete(interactions, i, 0)
+        temp_interactions = np.delete(temp_interactions, i, 1)
+        loo_interactions.append(temp_interactions)
+    return loo_interactions
 
 def generate_abundance_call(species_list, available_species, choose):
     if choose == 0:
