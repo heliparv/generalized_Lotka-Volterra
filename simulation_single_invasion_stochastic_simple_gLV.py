@@ -1,4 +1,3 @@
-"""
 ### LIBRARIES ###
 from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, generate_sigma
 from graphics import abundances_line_chart
