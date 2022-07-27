@@ -31,10 +31,10 @@ starting_abundances = generate_starting_abundances(n,seed_abundance=12, mean=200
 print("The initial abundances: ", starting_abundances)
 print()
 
-pairwise_interactions = generate_interactions(n, 1, 0, 0.0004, 0.3)
+pairwise_interactions = generate_interactions(n, 1,seed_interactions=12,seed_sparcity=12,mean= 0,std= 0.0004,sparcity= 0.3)
 
 
-pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.0008, 0.1)
+pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_selfinter=12,mean= -0.0008,std= 0.1)
 print("The pairwise interaction grid: \n", pairwise_interactions)
 print()
 
