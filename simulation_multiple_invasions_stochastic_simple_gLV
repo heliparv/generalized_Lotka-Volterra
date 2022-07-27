@@ -1,4 +1,3 @@
-"""
 ### LIBRARIES ###
 import numpy as np
 from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, generate_sigma
