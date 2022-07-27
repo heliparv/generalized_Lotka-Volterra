@@ -61,8 +61,9 @@ def generate_starting_abundances(n,seed_abundance, mean=100, std=0):
             abundances[i] = abundances[i]*-1
     return abundances
 
-def add_sparcity(array, sparcity,seed_sparcity):
-    random.seed(sparcity)
+def add_sparcity(array, sparcity):
+    #random.seed(sparcity)
+
     draw = bernoulli(sparcity)
     if len(np.shape(array)) == 1:
         sparcity_array = np.array(draw.rvs(np.size(array)), dtype=bool)
