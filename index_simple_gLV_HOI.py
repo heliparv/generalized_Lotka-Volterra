@@ -22,11 +22,11 @@ ri = generate_growth_rates(n, 0.3,seed_growth=12,std= 0.1)
 
 starting_abundances = generate_starting_abundances(n,seed_abundance=12,mean= 100, std=0.1)
 
-pairwise_interactions = generate_interactions(n, 1, 0, 0.00004, 0.3)
+pairwise_interactions = generate_interactions(n, 1, seed_interactions=12,seed_sparcity=12,mean=0, std=0.00004, sparcity=0.3)
 
-pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions, -0.008, 0.1)
+pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_selfinter=12, mean=-0.008, std=0.1)
 
-tertiary_interactions = generate_interactions(n, 2, -0.000004, 0.1, 0.5)
+tertiary_interactions = generate_interactions(n, 2,seed_interactions=12,seed_sparcity=12, mean=-0.000004,std= 0.1,sparcity= 0.5)
 
 #quaternary_interactions = generate_interactions(n, 3, 0, 0.0000004, 0.5)
 
