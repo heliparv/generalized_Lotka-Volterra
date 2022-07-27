@@ -46,7 +46,7 @@ model, relates intrinsic growth rate to self-interaction
 """
 
 def generate_growth_rates(n, mean, seed_growth,std = 0.1):
-    random.seed(seed_growth)
+    np.random.seed(seed_growth)
     ri = np.random.normal(loc=mean, scale=abs(mean*std), size=n)
     for i in range(0, len(ri)):
         if ri[i] < 0:
@@ -54,16 +54,15 @@ def generate_growth_rates(n, mean, seed_growth,std = 0.1):
     return np.around(ri, decimals=4)
 
 def generate_starting_abundances(n,seed_abundance, mean=100, std=0):
-    random.seed(seed_abundance)
+    np.random.seed(seed_abundance)
     abundances = np.random.normal(loc=mean, scale=abs(mean*std), size=n).astype(int)
     for i in range(0, len(abundances)):
         if abundances[i] < 0:
             abundances[i] = abundances[i]*-1
     return abundances
 
-def add_sparcity(array, sparcity):
-    #random.seed(sparcity)
-
+def add_sparcity(array, sparcity, seed_sparcity):
+    np.random.seed(seed_sparcity)
     draw = bernoulli(sparcity)
     if len(np.shape(array)) == 1:
         sparcity_array = np.array(draw.rvs(np.size(array)), dtype=bool)
@@ -75,13 +74,15 @@ def add_sparcity(array, sparcity):
     array[sparcity_array] = 0
     return array
 
-def generate_interactions(n, order, mean=0, std=0.1, sparcity=0.1):
+def generate_interactions(n, order,seed_interactions, seed_sparcity, mean=0, std=0.1, sparcity=0.1):
+    np.random.seed(seed_interactions)
     columns = comb(n, order)
     interactions = np.around((np.random.normal(loc=mean, scale=std, size=(n,columns))), decimals=8)
-    interactions = add_sparcity(interactions, sparcity)
+    interactions = add_sparcity(interactions, sparcity,seed_sparcity=seed_sparcity)
     return interactions
 
-def adjust_selfinteractions(n, interactions, mean=-0.1, std=0.1):
+def adjust_selfinteractions(n, interactions, seed_selfinter, mean=-0.1, std=0.1):
+    np.random.seed(seed_selfinter)
     selfinteractions = np.around((np.random.normal(loc=mean, scale=abs(mean*std), size=n)), decimals=4)
     for i in range(0,n):
         if selfinteractions[i] >= 0:
@@ -124,6 +125,7 @@ def calculate_carrying_capacities(ri, interactions):
     return np.array(carrying_capacities)
 
 def generate_sigma(n, seed_sigma, mean=0.1, std=1):
-    random.seed(seed_sigma)
+    np.random.seed(seed_sigma)
     sigma = np.abs(np.random.normal(loc=mean, scale=abs(mean*std), size=n))
     return np.around(sigma, decimals=4)
+
