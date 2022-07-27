@@ -19,11 +19,11 @@ n = 10
 #Maximum simulation time
 maxtime = 400
 
-ri = generate_growth_rates(n, 0.4, 0.1)
+ri = generate_growth_rates(n, 0.4,seed_growth=12, std=0.1)
 print("The growth rates: ", ri)
 print()
 
-starting_abundances = generate_starting_abundances(n, 100, 0.1)
+starting_abundances = generate_starting_abundances(n, seed_abundance=12,mean= 100, std=0.1)
 print("The initial abundances: ", starting_abundances)
 print()
 
@@ -37,7 +37,7 @@ print()
 #for total competition dynamics, all negative interactions:
 #pairwise_interactions = -1*abs(pairwise_interactions)
 
-sigma = generate_sigma(n, mean=0.1, std=0.1)
+sigma = generate_sigma(n,seed_sigma=12, mean=0.1, std=0.1)
 print("The sigma terms of the noise are: ", sigma)
 print()
 
@@ -53,3 +53,4 @@ else:
     print(abundances[-1])
     abundances_line_chart(n, maxtime, abundances)
     #interactions_heatmap(n, pairwise_interactions)
+

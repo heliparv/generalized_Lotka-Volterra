@@ -17,9 +17,9 @@ n = 10
 #Maximum simulation time
 maxtime = 400
 
-ri = generate_growth_rates(n, 0.4, 0.1)
+ri = generate_growth_rates(n, 0.4,seed_growth=12, std=0.1)
 
-starting_abundances = generate_starting_abundances(n, 100, 0.1)
+starting_abundances = generate_starting_abundances(n,seed_abundance=12,mean= 100, std=0.1)
 
 pairwise_interactions = generate_interactions(n, 1, 0, 0.0004, 0.3)
 

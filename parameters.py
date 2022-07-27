@@ -63,6 +63,7 @@ def generate_starting_abundances(n,seed_abundance, mean=100, std=0):
 
 def add_sparcity(array, sparcity):
     #random.seed(sparcity)
+
     draw = bernoulli(sparcity)
     if len(np.shape(array)) == 1:
         sparcity_array = np.array(draw.rvs(np.size(array)), dtype=bool)
@@ -126,4 +127,3 @@ def generate_sigma(n, seed_sigma, mean=0.1, std=1):
     random.seed(seed_sigma)
     sigma = np.abs(np.random.normal(loc=mean, scale=abs(mean*std), size=n))
     return np.around(sigma, decimals=4)
-

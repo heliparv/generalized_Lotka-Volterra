@@ -1,4 +1,3 @@
-import random
 import numpy as np
 from scipy.stats import bernoulli
 from math import comb
@@ -51,10 +50,10 @@ def rpsls(pairwise_interactions,mean=0, std=0.1):
             pairwise_interactions[j,k]=-(pairwise_interactions[k,j])
     return pairwise_interactions                                           
 
-def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, sparcity=0, interaction_std=0):
+def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity=0, interaction_std=0):
     n = len(pairwise_interactions[0])
-    chosen_species = choose_species_rps(n, sparcity)
-    grouping = grouping_function(chosen_species, groups_total)
+    chosen_species = choose_species_rps(n, sparcity,seed_sparcity)
+    grouping = grouping_function(chosen_species, groups_total, seed_groups)
 
     for winner_group in range(groups_total):
         loser_groups = list(range(winner_group+1, winner_group+distance+1))
@@ -71,14 +70,16 @@ def generalized_rps(pairwise_interactions, groups_total, distance, grouping_func
 
     return pairwise_interactions
 
-def choose_species_rps(n, sparcity):
+def choose_species_rps(n, sparcity, seed_sparcity):
+    random.seed(seed_sparcity)
     if sparcity < 1:
         keep = int(n*(1-sparcity))
     else:
         keep = n-sparcity
     return sample(range(n), keep)
 
-def even_groups_for_rps(species, groups):
+def even_groups_for_rps(species, groups, seed_groups):
+    random.seed(seed_groups)
     n = len(species)
     group_size = int(n/groups)
     shuffle(species)
@@ -93,7 +94,8 @@ def even_groups_for_rps(species, groups):
             grouping[targets[i]].append(extras[i])
     return grouping
 
-def random_groups_for_rps(species, groups):
+def random_groups_for_rps(species, groups, seed_groups):
+    random.seed(seed_groups)
     grouping = [[] for _ in range(groups)]
     for i in species:
         grouping[sample(range(groups),1)[0]].append(i)
