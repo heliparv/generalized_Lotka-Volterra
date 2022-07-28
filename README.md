@@ -1,8 +1,6 @@
 # generalized Lotka-Volterra modelling
 Modelling (microbial) communities with generalized Lotka-Volterra dynamics. Two alternate forms of the equation are used, termed here as *simple gLV* and *gLV with carrying capacity* or *gLV with K*
 
-The current simulations are temperamental and especially adding the higher-order interactions results in overflow in most cases.
-
 #### simple gLV
 ![simple gLV equation](equations/simple_gLV.png)
 
@@ -13,6 +11,26 @@ Where:
 - ri = intrinsic growth rate of species i
 - Ai<-j = effect of species j on species i
 - Bi<-jk = effect of species j and k on species i
+
+#### gLV with nutrient dynamics
+Model is a chemostat with constant rate of nutrient influx, growth of a bacteria species is dependant on the amount of nutrient in the system and the effect of other species.
+
+Changerate for species i is modelled with equation:
+
+![gLV with nutrient dynamics](equations/nutrient_dynamics_GLV.png)
+
+Where:
+- s is concentration of nutrient
+- Ki is concentration of nutrient needed for half of species i maximum growth rate
+- ri is maximum rate of growth
+
+And change rate of nutrient is modelled with equation:
+
+![gLV nutrient dynamics](equations/nutrient_dynamics_GLV_nutrient.png)
+
+Where:
+- D is amount of nutrient influx per time unit
+- gamma is amount of nutrient consumed per unit of species i abundance increase
 
 #### gLV with K
 ![gLV with K](equations/gLV_with_K.png)

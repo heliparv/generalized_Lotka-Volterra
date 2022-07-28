@@ -43,6 +43,10 @@ repeated in the call for an arbitrary number of times.
 calculate_carrying_capacities: Calculates the maximum carrying capacities for bacteria in the gLV with K
 model, relates intrinsic growth rate to self-interaction
 
+generate_positive_vector: Draws a vector of numbers from a normal distribution with length, mean,
+standard deviation, and seed specified in the call. Returns absolute values of drawn numbers rounded to
+4 decimals. Can be used to, for example, draw Ki and gamma for nutrient dynamics
+
 """
 
 def generate_growth_rates(n, mean, seed_growth,std = 0.1):
@@ -129,3 +133,6 @@ def generate_sigma(n, seed_sigma, mean=0.1, std=1):
     sigma = np.abs(np.random.normal(loc=mean, scale=abs(mean*std), size=n))
     return np.around(sigma, decimals=4)
 
+def generate_positive_vector(n, seed, mean, std):
+    np.random.seed(seed)
+    return abs(np.around(np.random.normal(loc=mean, scale=mean*std, size=n), decimals=4))
