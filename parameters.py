@@ -55,7 +55,8 @@ def generate_growth_rates(n, mean, seed_growth,std = 0.1):
     for i in range(0, len(ri)):
         if ri[i] < 0:
             ri[i] = ri[i]*-1
-    return np.around(ri, decimals=4)
+        ri[i] += 1
+    return ri
 
 def generate_starting_abundances(n,seed_abundance, mean=100, std=0):
     np.random.seed(seed_abundance)
