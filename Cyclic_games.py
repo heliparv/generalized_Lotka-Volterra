@@ -12,10 +12,12 @@ the given specifications. Input groups is the maximum size of cycles of interact
 distance is the maximum distance along the cycle with which species can interact, sparcity
 describes the number or fraction of species left outside of the simulation. grouping_function is
 input of either even_groups_for_rps or random_groups_for_rps depending on the desired way the species
-are grouped. Between to species the interactions are chosen so that the effect on winner is the absolute
+are grouped. Between two species the interactions are chosen so that the effect on winner is the absolute
 value of the interaction in the original interactions matrix and for the loser the interction is either
-the same value but negative or if interaction_std has been given the interaction strenght is drawn from
-a normal distribution centered on the winner's interaction.
+this value in negative or if interaction_std != 0 the interaction strenght is drawn from a normal
+distribution centered on the winner's interaction. If within_group_interactions is False, no interactions
+outside of the rps dynamics exist, if True then original interaction values for interactions outside
+of the system are kept.
 
 drop_species_from_rps: Add sparcity to the rps model.Takes input of number of species and desired
 sparcity. If given sparcity is lower than 1, it is used as a fraction, otherwise it's assumed to
@@ -29,31 +31,19 @@ random_groups_for_rps: Takes input of a list of species to choose from after spa
 the species group and number of groups, which is the cycle size in the cyclic dynamics. Randomly assigns
 each species to one of the groups.
 
-"""
+"""                                       
 
-def rpsls(pairwise_interactions,mean=0, std=0.1): 
- 
-    n=pairwise_interactions.shape[1]
-    choice=random.sample(range(n), 5)
-    #Each species is assigned numbers from 0 to 5 accoridng to their index and we work with 0-5 from now on
-    perm = list(permutations(range(5), 2))
-    #Can use their number in module 5 because we could get 0 even if not same species
-    diff= [((b - a) % 5) for a, b in perm]
-    for i in range(len(diff)):
-        j=choice[perm[i][0]]
-        k=choice[perm[i][1]]
-        if (diff[i]==1 or diff[i]==2):
-            pairwise_interactions[k,j]=abs(pairwise_interactions[k,j])
-            pairwise_interactions[j,k]=-(pairwise_interactions[k,j])
-        if (diff==3 or diff==4):
-            pairwise_interactions[k,j]=-abs(pairwise_interactions[k,j])
-            pairwise_interactions[j,k]=-(pairwise_interactions[k,j])
-    return pairwise_interactions                                           
-
-def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity=0, interaction_std=0):
+def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity, seed_interactions, interaction_std, within_group_interactions):
     n = len(pairwise_interactions[0])
     chosen_species = choose_species_rps(n, sparcity,seed_sparcity)
     grouping = grouping_function(chosen_species, groups_total, seed_groups)
+
+    np.random.seed(seed_interactions)
+    new_interactions = np.empty_like(pairwise_interactions)
+    print(new_interactions)
+    if within_group_interactions:
+        new_interactions[:] = pairwise_interactions
+        print(new_interactions)
 
     for winner_group in range(groups_total):
         loser_groups = list(range(winner_group+1, winner_group+distance+1))
@@ -65,10 +55,9 @@ def generalized_rps(pairwise_interactions, groups_total, distance, grouping_func
             for group in loser_groups:
                 for loser in grouping[group]:
                     interaction = abs(pairwise_interactions[winner][loser])
-                    pairwise_interactions[winner][loser] = interaction
-                    pairwise_interactions[loser][winner] = -abs(np.random.normal(loc=interaction, scale=interaction*interaction_std))
-
-    return pairwise_interactions
+                    new_interactions[winner][loser] = interaction
+                    new_interactions[loser][winner] = -abs(np.random.normal(loc=interaction, scale=interaction*interaction_std))
+    return new_interactions
 
 def choose_species_rps(n, sparcity, seed_sparcity):
     random.seed(seed_sparcity)

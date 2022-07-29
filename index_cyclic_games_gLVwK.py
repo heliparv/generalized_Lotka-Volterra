@@ -32,7 +32,7 @@ pairwise_interactions = generate_interactions(n, 1,seed_interactions=12,seed_spa
 
 pairwise_interactions = add_sparcity(pairwise_interactions, 0.3,seed_sparcity=12)
 
-pairwise_interactions = generalized_rps(pairwise_interactions, 6, 2, even_groups_for_rps,seed_groups=12,seed_sparcity=12, sparcity=0.2, interaction_std=0.1)
+pairwise_interactions = generalized_rps(pairwise_interactions, 6, 2, even_groups_for_rps,seed_groups=12,seed_sparcity=12, sparcity=0.2, interaction_std=0.1, within_group_interactions=False)
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_selfinter=12, mean=-0.001, std=0.1)
 
