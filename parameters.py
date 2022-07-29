@@ -73,16 +73,24 @@ def add_sparcity(array, sparcity, seed_sparcity):
     else:
         i, j = np.shape(array)
         sparcity_array = np.array(np.reshape(draw.rvs(i*j), (i, j)), dtype=bool)
-        for i in range(0,i):
-            sparcity_array[i][i] = 0
     array[sparcity_array] = 0
     return array
 
-def generate_interactions(n, order,seed_interactions, seed_sparcity, mean=0, std=0.1, sparcity=0.1):
+def add_pairwise_sparcity(n, pairwise_interactions, sparcity):
+    draw = bernoulli(sparcity)
+    spar_list = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
+    for i in range(n):
+        for j in range(i+1, n):
+            sparse = spar_list.pop()
+            if sparse:
+                pairwise_interactions[i][j] = 0
+                pairwise_interactions[j][i] = 0
+    return pairwise_interactions
+
+def generate_interactions(n, order,seed_interactions, mean=0, std=0.1):
     np.random.seed(seed_interactions)
     columns = comb(n, order)
     interactions = np.around((np.random.normal(loc=mean, scale=std, size=(n,columns))), decimals=8)
-    interactions = add_sparcity(interactions, sparcity,seed_sparcity=seed_sparcity)
     return interactions
 
 def adjust_selfinteractions(n, interactions, seed_selfinter, mean=-0.1, std=0.1):

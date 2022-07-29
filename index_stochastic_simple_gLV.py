@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import pandas as pd
-from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, generate_sigma
+from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, generate_sigma, add_sparcity
 from simulations_simple_gLV import only_viable_simple_gLV, simple_gLV_with_extinction, test_simple_gLV, stochastic_simple_gLV_with_extinction
 from graphics import abundances_line_chart, interactions_heatmap
 
@@ -27,7 +27,8 @@ starting_abundances = generate_starting_abundances(n, seed_abundance=12,mean= 10
 print("The initial abundances: ", starting_abundances)
 print()
 
-pairwise_interactions = generate_interactions(n, 1,seed_interactions=12,seed_sparcity=12,mean= 0,std= 0.0004,sparcity= 0.3)
+pairwise_interactions = generate_interactions(n, 1,seed_interactions=12,mean= 0,std= 0.0004)
+pairwise_interactions = add_sparcity(pairwise_interactions, sparcity=0.3, seed_sparcity=12)
 
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_selfinter=12,mean= -0.0008,std= 0.1)

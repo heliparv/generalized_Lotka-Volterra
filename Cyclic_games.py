@@ -105,7 +105,6 @@ def random_win_lose_system(n, pairwise_interactions, seed_winlose, sparcity, see
         for j in range(i+1, n):
             skip = skip_list.pop()
             if skip:
-                print(i, j)
                 continue
             win = winlose.pop()
             interaction_ij = abs(pairwise_interactions[i][j])

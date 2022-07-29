@@ -104,7 +104,7 @@ def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
                 print(f"species: {species}")
                 print(f"abundances t-1: {abundances[time-1]}")
                 print(f"interactions: {interactions[species]}")
-                return abundances
+                return -2
             if change_per_capita != 0 and steady:    
                 steady = False
             try:
@@ -115,7 +115,7 @@ def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
                 print(f"Species: {species}")
                 print(f"Abundance t-1: {abundances[time-1][species]}")
                 print(f"Change per capita: {change_per_capita}")
-                return abundances
+                return -2
         if steady:
             break
         else:
