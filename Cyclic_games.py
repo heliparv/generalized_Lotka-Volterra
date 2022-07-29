@@ -45,10 +45,8 @@ def generalized_rps(pairwise_interactions, groups_total, distance, grouping_func
 
     np.random.seed(seed_interactions)
     new_interactions = np.empty_like(pairwise_interactions)
-    print(new_interactions)
     if off_target_interactions:
         new_interactions[:] = pairwise_interactions
-        print(new_interactions)
 
     for winner_group in range(groups_total):
         loser_groups = list(range(winner_group+1, winner_group+distance+1))
