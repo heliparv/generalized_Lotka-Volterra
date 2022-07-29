@@ -15,7 +15,7 @@ input of either even_groups_for_rps or random_groups_for_rps depending on the de
 are grouped. Between two species the interactions are chosen so that the effect on winner is the absolute
 value of the interaction in the original interactions matrix and for the loser the interction is either
 this value in negative or if interaction_std != 0 the interaction strenght is drawn from a normal
-distribution centered on the winner's interaction. If within_group_interactions is False, no interactions
+distribution centered on the winner's interaction. If off_target_interactions is False, no interactions
 outside of the rps dynamics exist, if True then original interaction values for interactions outside
 of the system are kept.
 
@@ -38,7 +38,7 @@ eachother, sparcity should be added prior to using this function.
 
 """                                       
 
-def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity, seed_interactions, interaction_std, within_group_interactions):
+def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity, seed_interactions, interaction_std, off_target_interactions):
     n = len(pairwise_interactions[0])
     chosen_species = choose_species_rps(n, sparcity,seed_sparcity)
     grouping = grouping_function(chosen_species, groups_total, seed_groups)
@@ -46,7 +46,7 @@ def generalized_rps(pairwise_interactions, groups_total, distance, grouping_func
     np.random.seed(seed_interactions)
     new_interactions = np.empty_like(pairwise_interactions)
     print(new_interactions)
-    if within_group_interactions:
+    if off_target_interactions:
         new_interactions[:] = pairwise_interactions
         print(new_interactions)
 
