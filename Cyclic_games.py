@@ -31,6 +31,11 @@ random_groups_for_rps: Takes input of a list of species to choose from after spa
 the species group and number of groups, which is the cycle size in the cyclic dynamics. Randomly assigns
 each species to one of the groups.
 
+random_win_lose_system: Function for defining predation interactions in a more random fashion. Number of
+win-lose interactions is the reverse fraction of given sparcity value, win-lose direction is defined
+pseudorandomly. If sparcity in the interaction map is desired so that some species do not interact with
+eachother, sparcity should be added prior to using this function.
+
 """                                       
 
 def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity, seed_interactions, interaction_std, within_group_interactions):
@@ -89,3 +94,28 @@ def random_groups_for_rps(species, groups, seed_groups):
     for i in species:
         grouping[sample(range(groups),1)[0]].append(i)
     return grouping
+
+def random_win_lose_system(n, pairwise_interactions, seed_winlose, sparcity, seed_sparcity, interaction_std, seed_interaction):
+    np.random.seed(seed_winlose)
+    draw = bernoulli(0.5)
+    winlose = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
+    np.random.seed(seed_sparcity)
+    draw = bernoulli(sparcity)
+    skip_list = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
+    np.random.seed(seed_interaction)
+    for i in range(n):
+        for j in range(i+1, n):
+            skip = skip_list.pop()
+            if skip:
+                print(i, j)
+                continue
+            win = winlose.pop()
+            interaction_ij = abs(pairwise_interactions[i][j])
+            interaction_ji = np.random.normal(loc=interaction_ij, scale=interaction_ij*interaction_std)
+            if win:
+                pairwise_interactions[i][j] = interaction_ij
+                pairwise_interactions[j][i] = -interaction_ji
+            else:
+                pairwise_interactions[i][j] = -interaction_ij
+                pairwise_interactions[j][i] = interaction_ji
+    return pairwise_interactions
