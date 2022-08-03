@@ -95,29 +95,21 @@ def random_win_lose_system(n, pairwise_interactions, seed_winlose, sparcity, see
     np.random.seed(seed_winlose)
     draw = bernoulli(0.5)
     winlose = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
-    print(f"winlose: {winlose}")
     
     np.random.seed(seed_sparcity)
     draw = bernoulli(sparcity)
     skip_list = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
-    print(f"skiplist: {skip_list}")
     
     np.random.seed(seed_interaction)
     new_interactions = np.zeros_like(pairwise_interactions)
-    print(f"new:{new_interactions}")
     if off_target_interactions:
         new_interactions[:] = pairwise_interactions
-        print("")
-        print(new_interactions)
     
     for i in range(n):
         for j in range(i+1, n):
-            print(f"i,j: {i, j}")
             skip = skip_list.pop()
-            print(f"skip: {skip}")
             if skip:
                 continue
-            print("going on")
             win = winlose.pop()
             interaction_ij = abs(pairwise_interactions[i][j])
             interaction_ji = np.random.normal(loc=interaction_ij, scale=interaction_ij*interaction_std)
