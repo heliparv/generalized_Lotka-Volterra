@@ -1,8 +1,6 @@
 import numpy as np
 from scipy.stats import bernoulli
-from math import comb
 import random
-from itertools import permutations
 from random import shuffle, sample
 #from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions
 
@@ -38,13 +36,13 @@ eachother, sparcity should be added prior to using this function.
 
 """                                       
 
-def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity, seed_interactions, interaction_std, off_target_interactions):
+def generalized_rps(pairwise_interactions, groups_total, distance, grouping_function, seed_groups,seed_sparcity, sparcity, seed_interactions, interaction_std, off_target_interactions=False):
     n = len(pairwise_interactions[0])
     chosen_species = choose_species_rps(n, sparcity,seed_sparcity)
     grouping = grouping_function(chosen_species, groups_total, seed_groups)
 
     np.random.seed(seed_interactions)
-    new_interactions = np.empty_like(pairwise_interactions)
+    new_interactions = np.zeros_like(pairwise_interactions)
     if off_target_interactions:
         new_interactions[:] = pairwise_interactions
 
@@ -93,26 +91,40 @@ def random_groups_for_rps(species, groups, seed_groups):
         grouping[sample(range(groups),1)[0]].append(i)
     return grouping
 
-def random_win_lose_system(n, pairwise_interactions, seed_winlose, sparcity, seed_sparcity, interaction_std, seed_interaction):
+def random_win_lose_system(n, pairwise_interactions, seed_winlose, sparcity, seed_sparcity, interaction_std, seed_interaction, off_target_interactions=False):
     np.random.seed(seed_winlose)
     draw = bernoulli(0.5)
     winlose = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
+    print(f"winlose: {winlose}")
+    
     np.random.seed(seed_sparcity)
     draw = bernoulli(sparcity)
     skip_list = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
+    print(f"skiplist: {skip_list}")
+    
     np.random.seed(seed_interaction)
+    new_interactions = np.zeros_like(pairwise_interactions)
+    print(f"new:{new_interactions}")
+    if off_target_interactions:
+        new_interactions[:] = pairwise_interactions
+        print("")
+        print(new_interactions)
+    
     for i in range(n):
         for j in range(i+1, n):
+            print(f"i,j: {i, j}")
             skip = skip_list.pop()
+            print(f"skip: {skip}")
             if skip:
                 continue
+            print("going on")
             win = winlose.pop()
             interaction_ij = abs(pairwise_interactions[i][j])
             interaction_ji = np.random.normal(loc=interaction_ij, scale=interaction_ij*interaction_std)
             if win:
-                pairwise_interactions[i][j] = interaction_ij
-                pairwise_interactions[j][i] = -interaction_ji
+                new_interactions[i][j] = interaction_ij
+                new_interactions[j][i] = -interaction_ji
             else:
-                pairwise_interactions[i][j] = -interaction_ij
-                pairwise_interactions[j][i] = interaction_ji
-    return pairwise_interactions
+                new_interactions[i][j] = -interaction_ij
+                new_interactions[j][i] = interaction_ji
+    return new_interactions
