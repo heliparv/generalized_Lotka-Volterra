@@ -22,6 +22,8 @@ as either even_groups_for_rps or random_groups_for_rps
 n = 10
 #Maximum simulation time
 maxtime = 100
+time_increment = 1
+
 total_carrying_capacity = 20000000
 
 ri = generate_growth_rates(n, 0.5,seed_growth=12, std=0.1)
@@ -38,7 +40,7 @@ pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_se
 
 carrying_capacities = calculate_carrying_capacities(ri, pairwise_interactions)
 
-abundances = gLVwK_with_extinction(n, maxtime, pairwise_interactions, ri, carrying_capacities, starting_abundances, total_carrying_capacity)
+abundances = gLVwK_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, carrying_capacities, starting_abundances, total_carrying_capacity)
 
 if type(abundances) == int:
     if abundances == -1:
@@ -47,5 +49,5 @@ if type(abundances) == int:
         print("Encountered error")
 else:
     print(abundances[-1])
-    abundances_line_chart(n, maxtime, abundances)
+    abundances_line_chart(n, maxtime, time_increment, abundances)
     #interactions_heatmap(n, pairwise_interactions)

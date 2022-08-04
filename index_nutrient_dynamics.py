@@ -9,6 +9,7 @@ from graphics import abundances_line_chart, interactions_heatmap, abundances_and
 n = 5
 #Maximum simulation time
 maxtime = 4
+time_increment = 0.1
 
 ri = generate_growth_rates(n, 0.2,seed_growth=14, std=0.1)
 
@@ -30,7 +31,7 @@ pairwise_interactions = generalized_rps(pairwise_interactions, groups_total=5, d
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_selfinter=12, mean=-0.008,std= 0.1)
 
-abundances, nutrient = only_viable_nd(n, maxtime, pairwise_interactions, ri, Ki, starting_abundances, starting_nutrient, gamma, nutrient_influx)
+abundances, nutrient = only_viable_nd(n, maxtime, time_increment, pairwise_interactions, ri, Ki, starting_abundances, starting_nutrient, gamma, nutrient_influx)
 
 if type(abundances) == int:
     if abundances == -1:
@@ -39,5 +40,5 @@ if type(abundances) == int:
         print("Encountered error")
 else:
     print(abundances[-1])
-    abundances_and_nutrient_chart(n, maxtime, abundances, nutrient)
+    abundances_and_nutrient_chart(n, maxtime, time_increment, abundances, nutrient)
     #interactions_heatmap(n, pairwise_interactions)

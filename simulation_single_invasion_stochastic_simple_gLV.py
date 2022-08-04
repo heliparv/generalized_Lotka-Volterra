@@ -20,6 +20,7 @@ of the given mean. For example if mean is 100 CFU and desired std is 10 CFU the 
 n = 10
 #Maximum simulation time
 maxtime = 400
+time_increment = 1
 #Choose mutant species (usually we assume species 1 as the mutant)
 mutant = 1
 
@@ -47,7 +48,7 @@ print()
 
 ### INVASION FUNCTION ###
 
-final_abundances, ri = invasion(n, maxtime, ri, starting_abundances, pairwise_interactions, sigma, mutant)
+final_abundances, ri = invasion(n, maxtime, time_increment, ri, starting_abundances, pairwise_interactions, sigma, mutant)
 
 ### RESULTS ###
 
@@ -73,5 +74,5 @@ else:
     else:
         print(f"Mutant {mutant} cannot invade")
         print()
-    abundances_line_chart(n, maxtime, final_abundances)
+    abundances_line_chart(n, maxtime, time_increment, final_abundances)
     #interactions_heatmap(n, pairwise_interactions)

@@ -21,28 +21,29 @@ species go extinct and continues simulation to given maximum time. If overflow e
 
 """
 
-def only_viable_nd(n, maxtime, interactions, ri, Ki, starting_abundances, starting_nutrient, gamma, influx):
+def only_viable_nd(n, maxtime, time_increment, interactions, ri, Ki, starting_abundances, starting_nutrient, gamma, influx):
     np.seterr(all='raise')
-    abundances = np.zeros((maxtime+1, n))
+    max_increments = int(maxtime*(1/time_increment))
+    abundances = np.zeros((max_increments+1, n))
     abundances[0] = starting_abundances
-    nutrient = np.zeros(maxtime+1)
+    nutrient = np.zeros(max_increments+1)
     nutrient[0] = starting_nutrient
     time = 1
-    while time < maxtime+1:
+    while time < max_increments+1:
         steady = True
         try:
             growth_rates = (ri*nutrient[time-1])/(Ki+nutrient[time-1])
-            nutrient[time] = nutrient[time-1] + influx - sum(gamma*growth_rates*abundances[time-1])
+            nutrient[time] = nutrient[time-1] + (influx - sum(gamma*growth_rates*abundances[time-1]))*time_increment
             if nutrient[time] != nutrient[time-1]:
                 steady = False
         except:
             return -2, -2
         for species in range(0, n):
             try:
-                change_per_capita = growth_rates[species] + sum(abundances[time-1]*interactions[species])
+                change_per_capita = (growth_rates[species] + sum(abundances[time-1]*interactions[species]))*time_increment
                 if change_per_capita != 0 and steady:
                     steady = False
-                new_abundance = abundances[time-1][species] + int(abundances[time-1][species]*change_per_capita)
+                new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=6)
             except:
                 return -2, -2
             if new_abundance <= 0:
@@ -53,34 +54,35 @@ def only_viable_nd(n, maxtime, interactions, ri, Ki, starting_abundances, starti
             break
         else:
             time += 1
-    if steady and time != maxtime:
-        return add_steady_state_tail(abundances, nutrient, time, maxtime)
+    if steady and time < max_increments:
+        return add_steady_state_tail(abundances, nutrient, time, max_increments)
     return abundances, nutrient
 
-def nd_with_extinction(n, maxtime, interactions, ri, Ki, starting_abundances, starting_nutrient, gamma, influx):
+def nd_with_extinction(n, maxtime, time_increment, interactions, ri, Ki, starting_abundances, starting_nutrient, gamma, influx):
     np.seterr(all='raise')
-    abundances = np.zeros((maxtime+1, n))
+    max_increments = int(maxtime*(1/time_increment))
+    abundances = np.zeros((max_increments+1, n))
     abundances[0] = starting_abundances
-    nutrient = np.zeros(maxtime+1)
+    nutrient = np.zeros(max_increments+1)
     nutrient[0] = starting_nutrient
     time = 1
     livespecies = list(range(0,n))
-    while time < maxtime+1:
+    while time < max_increments+1:
         i = 0
         steady = True
         try:
             growth_rates = (ri*nutrient[time-1])/(Ki+nutrient[time-1])
-            nutrient[time] = nutrient[time-1] + influx - sum(gamma*growth_rates*abundances[time-1])
+            nutrient[time] = nutrient[time-1] + (influx - sum(gamma*growth_rates*abundances[time-1]))*time_increment
             if nutrient[time] != nutrient[time-1]:
                 steady = False
         except:
             return -2, -2
         while i < len(livespecies):
             try:
-                change_per_capita = growth_rates[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+                change_per_capita = (growth_rates[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]]))*time_increment
                 if change_per_capita != 0 and steady:
                     steady = False
-                new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita)
+                new_abundance = np.around((abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita), decimals=6)
             except:
                 return -2, -2
             if new_abundance <= 0:
@@ -92,13 +94,13 @@ def nd_with_extinction(n, maxtime, interactions, ri, Ki, starting_abundances, st
             break
         else:
             time += 1
-    if steady and time != maxtime:
-        return add_steady_state_tail(abundances, nutrient, time, maxtime)
+    if steady and time < max_increments:
+        return add_steady_state_tail(abundances, nutrient, time, max_increments)
     return abundances, nutrient
 
-def add_steady_state_tail(abundances, nutrient, time, maxtime):
-    steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+def add_steady_state_tail(abundances, nutrient, time, max_increments):
+    steady_abundances = np.repeat(np.array([abundances[time]]), max_increments-time, axis=0)
     abundances[time+1:] = steady_abundances
-    steady_nutrient = np.repeat(np.array([nutrient[time]]), maxtime-time)
+    steady_nutrient = np.repeat(np.array([nutrient[time]]), max_increments-time)
     nutrient[time+1:] = steady_nutrient
     return abundances, nutrient

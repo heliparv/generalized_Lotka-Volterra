@@ -23,7 +23,7 @@ of the given mean. For example if mean is 100 CFU and desired std is 10 CFU the 
 n = 10
 #Maximum simulation time
 maxtime = 400
-
+time_increment = 1
 
 ri = generate_growth_rates(n, 0.4,seed_growth=12, std=0.1)
 print("The growth rates: ", ri)
@@ -49,7 +49,7 @@ print("The sigma terms of the noise are: \n", sigma)
 print()
 
 
-final_abundances_after_invasions =  multiple_different_species_invasions(n, maxtime, ri, starting_abundances, pairwise_interactions, sigma)
+final_abundances_after_invasions =  multiple_different_species_invasions(n, maxtime, time_increment, ri, starting_abundances, pairwise_interactions, sigma)
     
 print("Final abundances per invasion (rows): \n", final_abundances_after_invasions)
 print()

@@ -18,6 +18,7 @@ of the given mean. For example if mean is 100 CFU and desired std is 10 CFU the 
 n = 10
 #Maximum simulation time
 maxtime = 400
+time_increment = 1
 
 ri = generate_growth_rates(n, 0.4,seed_growth=12, std=0.1)
 print("The growth rates: ", ri)
@@ -42,7 +43,7 @@ sigma = generate_sigma(n,seed_sigma=12, mean=0.1, std=0.1)
 print("The sigma terms of the noise are: ", sigma)
 print()
 
-abundances = stochastic_simple_gLV_with_extinction(n, maxtime, pairwise_interactions, ri, starting_abundances, sigma)
+abundances = stochastic_simple_gLV_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances, sigma)
 
 if type(abundances) == int:
     if abundances == -1:
@@ -52,5 +53,5 @@ if type(abundances) == int:
 else:
     print("The final abundances are: ")
     print(abundances[-1])
-    abundances_line_chart(n, maxtime, abundances)
+    abundances_line_chart(n, maxtime, time_increment, abundances)
     #interactions_heatmap(n, pairwise_interactions)

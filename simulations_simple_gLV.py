@@ -26,20 +26,21 @@ added while updating abundances.
 
 """
 
-def only_viable_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
+def only_viable_simple_gLV(n, maxtime, time_increment, interactions, ri, starting_abundances):
     np.seterr(all='raise')
-    abundances = np.zeros((maxtime+1, n))
+    max_increments = int(maxtime*(1/time_increment))
+    abundances = np.zeros((max_increments+1, n))
     abundances[0] = starting_abundances
     time = 1
     nonviable = False
-    while time < maxtime+1:
+    while time < max_increments+1:
         steady = True
         for species in range(0, n):
             try:
-                change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
+                change_per_capita = (ri[species] + sum(abundances[time-1]*interactions[species]))*time_increment
                 if change_per_capita != 0 and steady:
                     steady = False
-                new_abundance = abundances[time-1][species] + int(abundances[time-1][species]*change_per_capita)
+                new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=6)
             except:
                 return -2
             if new_abundance <= 0:
@@ -53,26 +54,27 @@ def only_viable_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
             break
         else:
             time += 1
-    if steady and time != maxtime:
-        steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+    if steady and time < max_increments:
+        steady_abundances = np.repeat(np.array([abundances[time]]), max_increments-time, axis=0)
         abundances[time+1:] = steady_abundances
     return abundances
 
-def simple_gLV_with_extinction(n, maxtime, interactions, ri, starting_abundances):
+def simple_gLV_with_extinction(n, maxtime, time_increment, interactions, ri, starting_abundances):
     np.seterr(all='raise')
-    abundances = np.zeros((maxtime+1, n))
+    max_increments = int(maxtime*(1/time_increment))
+    abundances = np.zeros((max_increments+1, n))
     abundances[0] = starting_abundances
     time = 1
     livespecies = list(range(0,n))
-    while time < maxtime+1:
+    while time < max_increments+1:
         i = 0
         steady = True
         while i < len(livespecies):
             try:
-                change_per_capita = ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+                change_per_capita = (ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]]))*time_increment
                 if change_per_capita != 0 and steady:
                     steady = False
-                new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita)
+                new_abundance = np.around((abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita), decimals=6)
             except:
                 return -2
             if new_abundance <= 0:
@@ -84,21 +86,22 @@ def simple_gLV_with_extinction(n, maxtime, interactions, ri, starting_abundances
             break
         else:
             time += 1
-    if steady and time != maxtime:
-        steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+    if steady and time < max_increments:
+        steady_abundances = np.repeat(np.array([abundances[time]]), max_increments-time, axis=0)
         abundances[time+1:] = steady_abundances
     return abundances
 
-def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
+def test_simple_gLV(n, maxtime, time_increment, interactions, ri, starting_abundances):
     np.seterr(all='raise')
-    abundances = np.zeros((maxtime+1, n))
+    max_increments = int(maxtime*(1/time_increment))
+    abundances = np.zeros((max_increments+1, n))
     abundances[0] = starting_abundances
     time = 1
-    while time < maxtime+1:
+    while time < max_increments+1:
         steady = True
         for species in range(0, n):
             try:
-                change_per_capita = ri[species] + sum(abundances[time-1]*interactions[species])
+                change_per_capita = (ri[species] + sum(abundances[time-1]*interactions[species]))*time_increment
             except:
                 print(f"Time: {time}")
                 print(f"species: {species}")
@@ -108,7 +111,7 @@ def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
             if change_per_capita != 0 and steady:    
                 steady = False
             try:
-                new_abundance = abundances[time-1][species] + int(abundances[time-1][species]*change_per_capita)
+                new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=6)
                 abundances[time][species] = new_abundance
             except:
                 print(f"Time: {time}")
@@ -120,27 +123,28 @@ def test_simple_gLV(n, maxtime, interactions, ri, starting_abundances):
             break
         else:
             time += 1
-    if steady and time != maxtime:
-        steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+    if steady and time != max_increments:
+        steady_abundances = np.repeat(np.array([abundances[time]]), max_increments-time, axis=0)
         abundances[time+1:] = steady_abundances
     return abundances
 
-def stochastic_simple_gLV_with_extinction(n, maxtime, interactions, ri, starting_abundances, sigma):
+def stochastic_simple_gLV_with_extinction(n, maxtime, time_increment, interactions, ri, starting_abundances, sigma):
     np.seterr(all='raise')
-    abundances = np.zeros((maxtime+1, n))
+    max_increments = int(maxtime*(1/time_increment))
+    abundances = np.zeros((max_increments+1, n))
     abundances[0] = starting_abundances
     time = 1
     livespecies = list(range(0,n))
-    while time < maxtime+1:
+    while time < max_increments+1:
         i = 0
         steady = True
         while i < len(livespecies):
             try:
-                change_per_capita = ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]])
+                change_per_capita = (ri[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]]))*time_increment
                 if change_per_capita != 0 and steady:
                     steady = False
                 dW = np.random.random() - np.random.random()
-                new_abundance = abundances[time-1][livespecies[i]] + int(abundances[time-1][livespecies[i]]*change_per_capita) + int(np.sqrt(abundances[time-1][livespecies[i]]*sigma[livespecies[i]])*dW)
+                new_abundance = np.around((abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita) + np.sqrt(abundances[time-1][livespecies[i]]*sigma[livespecies[i]])*dW, decimals=6)
             except:
                 return -2
             if new_abundance <= 0:
@@ -152,7 +156,7 @@ def stochastic_simple_gLV_with_extinction(n, maxtime, interactions, ri, starting
             break
         else:
             time += 1
-    if steady and time != maxtime:
-        steady_abundances = np.repeat(np.array([abundances[time]]), maxtime-time, axis=0)
+    if steady and time < max_increments:
+        steady_abundances = np.repeat(np.array([abundances[time]]), max_increments-time, axis=0)
         abundances[time+1:] = steady_abundances
     return abundances

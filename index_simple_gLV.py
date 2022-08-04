@@ -16,8 +16,9 @@ of the given mean. For example if mean is 100 CFU and desired std is 10 CFU the 
 n = 10
 #Maximum simulation time
 maxtime = 400
+time_increment = 1
 
-ri = generate_growth_rates(n, 0.4,seed_growth=12, std=0.1)
+ri = generate_growth_rates(n, mean=0.4, seed_growth=12, std=0.1)
 
 starting_abundances = generate_starting_abundances(n,seed_abundance=12,mean= 100, std=0.1)
 
@@ -27,10 +28,7 @@ pairwise_interactions = add_sparcity(pairwise_interactions, sparcity=0.3, seed_s
 
 pairwise_interactions = adjust_selfinteractions(n, pairwise_interactions,seed_selfinter=12, mean=-0.0008,std= 0.1)
 
-#for total competition dynamics, all negative interactions:
-#pairwise_interactions = -1*abs(pairwise_interactions)
-
-abundances = simple_gLV_with_extinction(n, maxtime, pairwise_interactions, ri, starting_abundances)
+abundances = simple_gLV_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
 
 if type(abundances) == int:
     if abundances == -1:
@@ -39,5 +37,5 @@ if type(abundances) == int:
         print("Encountered error")
 else:
     print(abundances[-1])
-    abundances_line_chart(n, maxtime, abundances)
+    abundances_line_chart(n, maxtime, time_increment, abundances)
     #interactions_heatmap(n, pairwise_interactions)
