@@ -27,6 +27,12 @@ adjust_selfinteractions: Takes generated pairwise interactions and adjusts the d
 the pairwise interactions, and replaces them with values drawn from a normal distribution with
 the given mean and standard deviation.
 
+adjust_selfinteractions_for_carrying_capacity: When using previous function with high variance in species
+ri we often end up with some species having very low carrying capacities and some having high carrying
+capacities. In this function we give a carrying capacity for each species (drawn with
+generate_abundances) and this function calculates desired self-interaction with equation
+K = -ri/Aii -> Aii = -ri/K
+
 generate_loo_interaction_matrices: Takes a pairwise interactions matrix and return a list
 of interactions matrices for leave-one-out simulations
 
@@ -57,7 +63,7 @@ def generate_growth_rates(n, mean, seed_growth,std = 0.1):
             ri[i] = ri[i]*-1
     return ri
 
-def generate_starting_abundances(n,seed_abundance, mean=100, std=0):
+def generate_abundances(n,seed_abundance, mean=100, std=0):
     np.random.seed(seed_abundance)
     abundances = np.random.normal(loc=mean, scale=abs(mean*std), size=n).astype(int)
     for i in range(0, len(abundances)):
@@ -101,6 +107,11 @@ def adjust_selfinteractions(n, interactions, seed_selfinter, mean=-0.1, std=0.1)
             interactions[i][i] = -1*selfinteractions[i]
         else:
             interactions[i][i] = selfinteractions[i]
+    return interactions
+
+def adjust_selfinteractions_for_carrying_capacity(n, interactions, ri, carrying_capacities):
+    for i in range(0,n):
+        interactions[i][i] = -(ri[i]/carrying_capacities[i])
     return interactions
 
 def generate_loo_interaction_matrices(interactions):

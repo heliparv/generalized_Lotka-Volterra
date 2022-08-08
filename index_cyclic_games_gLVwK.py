@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from parameters import add_sparcity, generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, calculate_carrying_capacities
+from parameters import add_sparcity, generate_growth_rates, generate_interactions, generate_abundances, adjust_selfinteractions, calculate_carrying_capacities
 from Cyclic_games import generalized_rps, even_groups_for_rps, random_groups_for_rps
 from simulations_gLVwK import only_viable_gLVwK, gLVwK_with_extinction, test_gLVwK
 from graphics import abundances_line_chart, interactions_heatmap
@@ -28,7 +28,7 @@ total_carrying_capacity = 20000000
 
 ri = generate_growth_rates(n, 0.5,seed_growth=12, std=0.1)
 
-starting_abundances = generate_starting_abundances(n, seed_abundance=12, mean=100, std=0.1)
+starting_abundances = generate_abundances(n, seed_abundance=12, mean=100, std=0.1)
 
 pairwise_interactions = generate_interactions(n, 1,seed_interactions=12, mean=0, std=0.001)
 

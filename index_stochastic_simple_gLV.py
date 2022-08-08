@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import pandas as pd
-from parameters import generate_growth_rates, generate_interactions, generate_starting_abundances, adjust_selfinteractions, generate_sigma, add_sparcity
+from parameters import generate_growth_rates, generate_interactions, generate_abundances, adjust_selfinteractions, generate_sigma, add_sparcity
 from simulations_simple_gLV import only_viable_simple_gLV, simple_gLV_with_extinction, test_simple_gLV, stochastic_simple_gLV_with_extinction
 from graphics import abundances_line_chart, interactions_heatmap
 
@@ -24,7 +24,7 @@ ri = generate_growth_rates(n, 0.4,seed_growth=12, std=0.1)
 print("The growth rates: ", ri)
 print()
 
-starting_abundances = generate_starting_abundances(n, seed_abundance=12,mean= 100, std=0.1)
+starting_abundances = generate_abundances(n, seed_abundance=12,mean= 100, std=0.1)
 print("The initial abundances: ", starting_abundances)
 print()
 
