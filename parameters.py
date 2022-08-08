@@ -63,13 +63,20 @@ def generate_growth_rates(n, mean, seed_growth,std = 0.1):
             ri[i] = ri[i]*-1
     return ri
 
-def generate_abundances(n,seed_abundance, mean=100, std=0):
-    np.random.seed(seed_abundance)
+def generate_abundances(n, seed, mean, std):
+    np.random.seed(seed)
     abundances = np.random.normal(loc=mean, scale=abs(mean*std), size=n).astype(int)
     for i in range(0, len(abundances)):
         if abundances[i] < 0:
             abundances[i] = abundances[i]*-1
     return abundances
+
+def generate_loo_starting_abundances(n, seed, mean, std):
+    np.random.seed(seed)
+    abundances = []
+    for i in range(0, n):
+        abundances.append(generate_abundances(n-1, np.random.randint(0, 2**31), mean, std))
+    return np.array(abundances)
 
 def add_sparcity(array, sparcity, seed_sparcity):
     np.random.seed(seed_sparcity)
@@ -121,7 +128,7 @@ def generate_loo_interaction_matrices(interactions):
         temp_interactions = np.delete(interactions, i, 0)
         temp_interactions = np.delete(temp_interactions, i, 1)
         loo_interactions.append(temp_interactions)
-    return loo_interactions
+    return np.array(loo_interactions)
 
 def generate_abundance_call(species_list, available_species, choose):
     if choose == 0:

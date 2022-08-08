@@ -3,7 +3,8 @@ gLV_with_Gould_et_al.py
 gLV_with_Ansari_et_al.py
 EPICS_function.py
 temptest.py
-capture_sims.py
+capture_sims_winlose.py
+capture_sims_rps.py
 .gitignore
 make_dataframe.py
 normal_vs_nutrient.py

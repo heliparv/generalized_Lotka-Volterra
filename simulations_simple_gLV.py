@@ -160,3 +160,9 @@ def stochastic_simple_gLV_with_extinction(n, maxtime, time_increment, interactio
         steady_abundances = np.repeat(np.array([abundances[time]]), max_increments-time, axis=0)
         abundances[time+1:] = steady_abundances
     return abundances
+
+def leave_one_out_simple_gLV_with_extinction(n, maxtime, time_increment, loo_interactions, ri, loo_starting_abundances):
+    abundances = []
+    for i in range(0,n):
+        abundances.append(simple_gLV_with_extinction(n-1, maxtime, time_increment, loo_interactions[i], ri, loo_starting_abundances[i]))
+    return np.array(abundances)
