@@ -13,7 +13,7 @@ of the given mean. For example if mean is 100 CFU and desired std is 10 CFU the 
 """
 
 #Number of species
-n = 10
+n = 200
 #Maximum simulation time
 maxtime = 400
 time_increment = 1
@@ -37,5 +37,5 @@ if type(abundances) == int:
         print("Encountered error")
 else:
     print(abundances[-1])
-    abundances_line_chart(n, maxtime, time_increment, abundances)
+    abundances_line_chart(n, time_increment, abundances)
     #interactions_heatmap(n, pairwise_interactions)

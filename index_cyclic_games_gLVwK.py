@@ -49,5 +49,5 @@ if type(abundances) == int:
         print("Encountered error")
 else:
     print(abundances[-1])
-    abundances_line_chart(n, maxtime, time_increment, abundances)
+    abundances_line_chart(n, time_increment, abundances)
     #interactions_heatmap(n, pairwise_interactions)

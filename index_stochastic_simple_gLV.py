@@ -53,5 +53,5 @@ if type(abundances) == int:
 else:
     print("The final abundances are: ")
     print(abundances[-1])
-    abundances_line_chart(n, maxtime, time_increment, abundances)
+    abundances_line_chart(n, time_increment, abundances)
     #interactions_heatmap(n, pairwise_interactions)

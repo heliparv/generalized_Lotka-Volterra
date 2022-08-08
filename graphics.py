@@ -9,8 +9,13 @@ abundances_line_chart: Draws a line chart of the given abundance data.
 interactions heatmap: Draws a heatmap based on the given interactions between species.
 """
 
-def abundances_line_chart(n, maxtime, time_increment, abundances):
-    x = np.arange(0, maxtime+time_increment, time_increment)
+def abundances_line_chart(n, time_increment, abundances):
+    times, species = np.shape(abundances)
+    x = []
+    value = 0
+    for i in range(0, times):
+        x.append(value)
+        value += time_increment
     plt.figure()
     plt.plot(x, abundances)
     plt.xlabel("Time")
@@ -19,7 +24,12 @@ def abundances_line_chart(n, maxtime, time_increment, abundances):
     return plt.show()
 
 def abundances_and_nutrient_chart(n, maxtime, time_increment, abundances, nutrient):
-    x = np.arange(0, maxtime+time_increment, time_increment)
+    times, species = np.shape(abundances)
+    x = []
+    value = 0
+    for i in range(0, times):
+        x.append(value)
+        value += time_increment
     fig, ax1 = plt.subplots() 
     ax1.set_xlabel('') 
     ax1.set_ylabel('Species abundance') 

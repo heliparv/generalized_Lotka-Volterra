@@ -5,3 +5,5 @@ EPICS_function.py
 temptest.py
 capture_sims.py
 .gitignore
+make_dataframe.py
+normal_vs_nutrient.py
