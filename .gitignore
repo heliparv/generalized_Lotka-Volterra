@@ -5,6 +5,7 @@ EPICS_function.py
 temptest.py
 capture_sims_winlose.py
 capture_sims_rps.py
+capture_training_data.py
 .gitignore
 make_dataframe.py
 normal_vs_nutrient.py
