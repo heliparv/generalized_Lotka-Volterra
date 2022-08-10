@@ -38,7 +38,7 @@ def only_viable_gLVwK(n, maxtime, time_increment, interactions, ri, carrying_cap
             try:
                 change_per_capita = (ri[species]*((carrying_capacities[species]-abundances[time-1][species])/carrying_capacities[species])+ (sum(abundances[time-1]*interactions[species])))*time_increment
                 change_per_capita = total_carrying_limit*change_per_capita
-                if change_per_capita != 0 and steady:
+                if abs(change_per_capita) > 0.0001 and steady:
                     steady = False
                 new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=6)
             except:
@@ -74,7 +74,7 @@ def gLVwK_with_extinction(n, maxtime, time_increment, interactions, ri, carrying
             try:
                 change_per_capita = (ri[livespecies[i]]*((carrying_capacities[livespecies[i]]-abundances[time-1][livespecies[i]])/carrying_capacities[livespecies[i]])+ (sum(abundances[time-1]*interactions[livespecies[i]])))*time_increment
                 change_per_capita = total_carrying_limit*change_per_capita
-                if change_per_capita != 0 and steady:
+                if abs(change_per_capita) > 0.0001 and steady:
                     steady = False
                 new_abundance = np.around((abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita), decimals=6)
             except:
@@ -114,7 +114,7 @@ def test_gLVwK(n, maxtime, time_increment, interactions, ri, carrying_capacities
                 print(f"Carrying capasity: {carrying_capacities[species]}")
                 print(f"total carrying limit: {total_carrying_limit}")
                 return abundances
-            if change_per_capita != 0 and steady:
+            if abs(change_per_capita) > 0.0001 and steady:
                 steady = False
             try:
                 new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=6)

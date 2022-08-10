@@ -41,7 +41,7 @@ def only_viable_nd(n, maxtime, time_increment, interactions, ri, Ki, starting_ab
         for species in range(0, n):
             try:
                 change_per_capita = (growth_rates[species] + sum(abundances[time-1]*interactions[species]))*time_increment
-                if change_per_capita != 0 and steady:
+                if abs(change_per_capita) > 0.0001 and steady:
                     steady = False
                 new_abundance = np.around((abundances[time-1][species] + abundances[time-1][species]*change_per_capita), decimals=6)
             except:
@@ -80,7 +80,7 @@ def nd_with_extinction(n, maxtime, time_increment, interactions, ri, Ki, startin
         while i < len(livespecies):
             try:
                 change_per_capita = (growth_rates[livespecies[i]] + sum(abundances[time-1]*interactions[livespecies[i]]))*time_increment
-                if change_per_capita != 0 and steady:
+                if abs(change_per_capita) > 0.0001 and steady:
                     steady = False
                 new_abundance = np.around((abundances[time-1][livespecies[i]] + abundances[time-1][livespecies[i]]*change_per_capita), decimals=6)
             except:
