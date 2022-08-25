@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from parameters import generate_growth_rates, generate_interactions, generate_abundances, adjust_selfinteractions_for_carrying_capacity, add_sparcity
 from Cyclic_games import generalized_rps, even_groups_for_rps
-from simulations_simple_gLV import simple_gLV_with_extinction
+from simulations_simple_gLV import simple_gLV_with_extinction, simple_gLV_return_steady_state_abundances
 from graphics import abundances_line_chart
 from data_modification import relative_abundances
 
@@ -34,9 +34,9 @@ def simulated_datasets_abundances(repetition=20,n=23,maxtime=250,time_increment=
     pairwise_interactions = generalized_rps(pairwise_interactions, rps_groups, rps_distance, even_groups_for_rps, rps_group_seed, rps_sparcity_seed, rps_sparcity, rps_interactions_seed, rps_interactions_std, off_target_interactions)
     pairwise_interactions = adjust_selfinteractions_for_carrying_capacity(n, pairwise_interactions, ri, carrying_capacities)
 
-    interact_columns = ["species", "ri", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23"]
-    interact_array = np.zeros((23,25))
-    interact_array[:,0] = list(range(1,24))
+    interact_columns=["Species","ri"]+["A" + str(i) for i in range(1,n+1)]
+    interact_array = np.zeros((n,n+2))
+    interact_array[:,0] = list(range(1,n+1))
     interact_array[:,1] = ri
     interact_array[:,2:] = pairwise_interactions
     interact_frame = pd.DataFrame(interact_array, columns=interact_columns)
@@ -59,7 +59,7 @@ def simulated_datasets_abundances(repetition=20,n=23,maxtime=250,time_increment=
                 abundances_mean=np.random.randint(abundances_mean_range_low,abundances_mean_range_up)
                 abundance_means.append(abundances_mean)
                 starting_abundances = generate_abundances(n,abundances_seed,abundances_mean,abundances_std)
-                abundances = simple_gLV_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
+                abundances = simple_gLV_return_steady_state_abundances(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
                 
                 
                 if type(abundances) == int:
@@ -67,6 +67,8 @@ def simulated_datasets_abundances(repetition=20,n=23,maxtime=250,time_increment=
                 else:
                     if sum(abundances[-1]<10)>0:
                         print("nope")
+                    else: 
+                        print("ok")
 
                     expframe = pd.DataFrame(np.reshape(([rep]+list(abundances[-1])), (1,n+1)), columns=species_columns)
                     data=pd.concat([data, expframe], ignore_index=True, axis=0)
@@ -133,15 +135,15 @@ def simulated_datasets_ri(repetition=20,n=23,maxtime=250,time_increment=0.05,ri_
                 ri_means.append(ri_mean)
                 ri = generate_growth_rates(n, ri_mean, ri_seed, ri_std)
                 pairwise_interactions = adjust_selfinteractions_for_carrying_capacity(n, pairwise_interactions, ri, carrying_capacities)
-                interact_columns = ["species", "ri", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23"]
-                interact_array = np.zeros((23,25))
-                interact_array[:,0] = list(range(1,24))
+                interact_columns=["Species","ri"]+["A" + str(i) for i in range(1,n+1)]
+                interact_array = np.zeros((n,n+2))
+                interact_array[:,0] = list(range(1,n+1))
                 interact_array[:,1] = ri
                 interact_array[:,2:] = pairwise_interactions
                 interact_frame = pd.DataFrame(interact_array, columns=interact_columns)
                 interactions.append(interact_frame)
                 starting_abundances = generate_abundances(n,abundances_seed,abundances_mean,abundances_std)
-                abundances = simple_gLV_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
+                abundances = simple_gLV_return_steady_state_abundances(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
     
                 
                 if type(abundances) == int:
@@ -149,6 +151,8 @@ def simulated_datasets_ri(repetition=20,n=23,maxtime=250,time_increment=0.05,ri_
                 else:
                     if sum(abundances[-1]<10)>0:
                         print("nope")
+                    else: 
+                        print("ok")
 
                     expframe = pd.DataFrame(np.reshape(([rep]+list(abundances[-1])), (1,n+1)), columns=species_columns)
                     data=pd.concat([data, expframe], ignore_index=True, axis=0)
@@ -226,15 +230,17 @@ def simulated_datasets_ri_abundances(repetition=20,n=23,maxtime=250,time_increme
                 ri_means.append(ri_mean)
                 ri = generate_growth_rates(n, ri_mean, ri_seed, ri_std)
                 pairwise_interactions = adjust_selfinteractions_for_carrying_capacity(n, pairwise_interactions, ri, carrying_capacities)
-                interact_columns = ["species", "ri", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23"]
-                interact_array = np.zeros((23,25))
-                interact_array[:,0] = list(range(1,24))
+                #interact_columns = ["species", "ri", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23"]
+                interact_columns=["Species","ri"]+["A" + str(i) for i in range(1,n+1)]
+
+                interact_array = np.zeros((n,n+2))
+                interact_array[:,0] = list(range(1,n+1))
                 interact_array[:,1] = ri
                 interact_array[:,2:] = pairwise_interactions
                 interact_frame = pd.DataFrame(interact_array, columns=interact_columns)
                 interactions.append(interact_frame)
                 starting_abundances = generate_abundances(n,abundances_seed,abundances_mean,abundances_std)
-                abundances = simple_gLV_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
+                abundances = simple_gLV_return_steady_state_abundances(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
     
                 
                 if type(abundances) == int:
@@ -242,6 +248,8 @@ def simulated_datasets_ri_abundances(repetition=20,n=23,maxtime=250,time_increme
                 else:
                     if sum(abundances[-1]<10)>0:
                         print("nope")
+                    else: 
+                        print("ok")
 
                     expframe = pd.DataFrame(np.reshape(([rep]+list(abundances[-1])), (1,n+1)), columns=species_columns)
                     data=pd.concat([data, expframe], ignore_index=True, axis=0)
@@ -269,6 +277,6 @@ def simulated_datasets_ri_abundances(repetition=20,n=23,maxtime=250,time_increme
             break
 
 
-simulated_datasets_abundances()
-simulated_datasets_ri()
-simulated_datasets_ri_abundances()
+simulated_datasets_abundances(repetition=20,n=20,maxtime=250,time_increment=0.15,ri_mean=0.1,ri_std=0.1,carrying_capacities_mean=2000,carrying_capacities_std=0.5,abundances_mean_range_low=50,abundances_mean_range_up=700,abundances_std=0.01,interactions_mean=-0.00003,interactions_std=0.000002,interactions_sparcity=0,rps_groups=7,rps_distance=2,rps_sparcity=0.4,rps_interactions_std=0.2,off_target_interactions = False)
+simulated_datasets_ri(repetition=20,n=20,maxtime=250,time_increment=0.15,ri_mean_low=0.0, ri_mean_up=0.99,ri_std=0.1,carrying_capacities_mean=2000,carrying_capacities_std=0.5,abundances_mean=100,abundances_std=0.01,interactions_mean=-0.00003,interactions_std=0.000002,interactions_sparcity=0,rps_groups=7,rps_distance=2,rps_sparcity=0.4,rps_interactions_std=0.2,off_target_interactions = False)
+simulated_datasets_ri_abundances(repetition=20,n=20,maxtime=250,time_increment=0.15,ri_mean_low=0.0, ri_mean_up=0.99,ri_std=0.1,carrying_capacities_mean=2000,carrying_capacities_std=0.5,abundances_mean_range_low=50,abundances_mean_range_up=700,abundances_std=0.01,interactions_mean=-0.00003,interactions_std=0.000002,interactions_sparcity=0,rps_groups=7,rps_distance=2,rps_sparcity=0.4,rps_interactions_std=0.2,off_target_interactions = False)
