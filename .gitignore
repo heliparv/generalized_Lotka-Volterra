@@ -6,6 +6,9 @@ temptest.py
 capture_sims_winlose.py
 capture_sims_rps.py
 capture_training_data.py
+capture_sims_check_community.py
 .gitignore
 make_dataframe.py
 normal_vs_nutrient.py
+data_analysis.py
+data_analysis_functions.py

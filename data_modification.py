@@ -8,5 +8,5 @@ species at given time points. Returns an array with relative abundances
 """
 
 def relative_abundances(abundances):
-    sums = np.sum(abundances, 1)
+    sums = np.sum(abundances, axis=1)
     return abundances/sums[:,None]
