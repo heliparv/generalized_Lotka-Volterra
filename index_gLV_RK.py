@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from parameters import generate_growth_rates, generate_interactions, generate_abundances, add_sparcity, adjust_selfinteractions_for_carrying_capacity, calculate_carrying_capacities
-from simulations_simple_gLV import simple_gLV_with_extinction
 from sim_gLV_RK import gLV_RK
 from Cyclic_games import random_win_lose_system
 from graphics import abundances_line_chart
@@ -33,14 +32,6 @@ pairwise_interactions = random_win_lose_system(n, pairwise_interactions, seed_wi
 carrying_capacities = generate_abundances(n, seed=45, mean=2000, std=0.3)
 
 pairwise_interactions = adjust_selfinteractions_for_carrying_capacity(n, pairwise_interactions, ri, carrying_capacities)
-
-abundances = simple_gLV_with_extinction(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
-
-if type(abundances) == int:
-    print("Encountered error")
-else:
-    print(abundances[-1])
-    abundances_line_chart(n, time_increment, abundances)
 
 abundances = gLV_RK(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
 
