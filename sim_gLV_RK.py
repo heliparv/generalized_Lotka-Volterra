@@ -51,6 +51,12 @@ def gLV_RK(n, maxtime, time_increment, interactions, ri, starting_abundances):
     abundances[0] = starting_abundances
     time = 1
     livespecies = list(range(0,n))
+    if sum(starting_abundances==0)>0:
+        i = 0
+        while i < len(livespecies):
+            if starting_abundances[livespecies[i]] == 0:
+                del livespecies[i]
+            i +=1
     steady = False
     while time < max_increments+1:
         k1 = find_change(n, abundances[time-1], interactions, ri, livespecies, time_increment)
@@ -88,6 +94,12 @@ def stochastic_gLV_RK(n, maxtime, time_increment, interactions, ri, starting_abu
     abundances[0] = starting_abundances
     time = 1
     livespecies = list(range(0,n))
+    if sum(starting_abundances==0)>0:
+        i = 0
+        while i < len(livespecies):
+            if starting_abundances[livespecies[i]] == 0:
+                del livespecies[i]
+            i +=1
     while time < max_increments+1:
         k1 = find_change(n, abundances[time-1], interactions, ri, livespecies, time_increment)
         if type(k1) == int:
@@ -118,12 +130,6 @@ def stochastic_gLV_RK(n, maxtime, time_increment, interactions, ri, starting_abu
         time += 1
     return abundances
 
-def leave_one_out_gLV_RK(n, maxtime, time_increment, loo_interactions, ri, loo_starting_abundances):
-    abundances = []
-    for i in range(0,n):
-        abundances.append(gLV_RK(n-1, maxtime, time_increment, loo_interactions[i], ri, loo_starting_abundances[i]))
-    return np.array(abundances)
-
 def gLV_RK_return_steady_state(n, maxtime, time_increment, interactions, ri, starting_abundances):
     np.seterr(all='raise')
     max_increments = int(maxtime*(1/time_increment))
@@ -132,6 +138,12 @@ def gLV_RK_return_steady_state(n, maxtime, time_increment, interactions, ri, sta
     index = 0
     time = 1
     livespecies = list(range(0,n))
+    if sum(starting_abundances==0)>0:
+        i = 0
+        while i < len(livespecies):
+            if starting_abundances[livespecies[i]] == 0:
+                del livespecies[i]
+            i +=1
     steady = False
     while time < max_increments+1:
         k1 = find_change(n, abundances[index], interactions, ri, livespecies, time_increment)

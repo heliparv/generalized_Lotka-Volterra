@@ -14,6 +14,10 @@ be chosen freely.
 generate_starting_abundances: Generates the abundances of each species at start of simulation
 by drawing from a normal distribution where the mean and standard deviation can be set.
 
+generate_abundances_for_repeats: Used to generate a list of starting abundances for multiple
+repeated simulations. As inputs takes number of species, the range of mean starting abundances,
+the standard deviation of starting abundances and the number of repeats.
+
 add_sparcity: takes a 1- or 2-dimensional numpy array and a sparcity term. Uses sparcity term
 to draw a boolean index from a bernouilli distribution, sets chosen indexes to zero on the
 given array.
@@ -65,17 +69,29 @@ def generate_growth_rates(n, mean, seed_growth,std = 0.1):
 
 def generate_abundances(n, seed, mean, std):
     np.random.seed(seed)
-    abundances = np.random.normal(loc=mean, scale=abs(mean*std), size=n).astype(int)
+    abundances = np.random.normal(loc=mean, scale=mean*std, size=n).astype(int)
     for i in range(0, len(abundances)):
         if abundances[i] < 0:
             abundances[i] = abundances[i]*-1
     return abundances
 
+def generate_abundances_for_repeats(n, seed, repeats, min_mean, max_mean, std):
+    np.random.seed(seed)
+    if min_mean == max_mean:
+        means = min_mean*np.ones(n)
+    else:
+        means = np.linspace(min_mean, max_mean, num=repeats)
+    abundances = []
+    for i in means:
+        abundances.append(generate_abundances(n, np.random.randint(0, 2**31), i, std))
+    return np.array(abundances)
+
 def generate_loo_starting_abundances(n, seed, mean, std):
     np.random.seed(seed)
     abundances = []
     for i in range(0, n):
-        abundances.append(generate_abundances(n-1, np.random.randint(0, 2**31), mean, std))
+        abundances.append(generate_abundances(n, np.random.randint(0, 2**31), mean, std))
+        abundances[i][i] = 0
     return np.array(abundances)
 
 def add_sparcity(array, sparcity, seed_sparcity):
@@ -120,15 +136,6 @@ def adjust_selfinteractions_for_carrying_capacity(n, interactions, ri, carrying_
     for i in range(0,n):
         interactions[i][i] = -(ri[i]/carrying_capacities[i])
     return interactions
-
-def generate_loo_interaction_matrices(interactions):
-    n = len(interactions[0])
-    loo_interactions = []
-    for i in range(0, n):
-        temp_interactions = np.delete(interactions, i, 0)
-        temp_interactions = np.delete(temp_interactions, i, 1)
-        loo_interactions.append(temp_interactions)
-    return np.array(loo_interactions)
 
 def generate_abundance_call(species_list, available_species, choose):
     if choose == 0:
