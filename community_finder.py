@@ -17,6 +17,13 @@ from sim_gLV_RK import gLV_RK
 from Cyclic_games import random_win_lose_system
 from graphics import abundances_line_chart
 
+#starting abundances are defined for community finder only, the repeats will have their own definition
+#sa_seed defines how starting abundances are drawn
+sa_seed = 55
+#starting abundances
+sa_mean = 100
+sa_std = 0.1
+
 #copypaste start
 
 #Number of species
@@ -30,9 +37,6 @@ time_increment = 0.1
 species_seed = 23
 #interact_seed chooses how interactions are randomly drawn
 interact_seed = 7372
-#sa_seed defines how starting abundances are drawn
-sa_seed = 55
-
 
 #Following parameters determine distributions parameters are drawn from
 
@@ -48,12 +52,8 @@ cc_std = 0.3
 interact_mean = 0
 interact_std = 0.0004
 
-#starting abundances
-sa_mean = 100
-sa_std = 0.1
 
-
-#Simulation settings:
+#Competition settings:
 
 #Add sparcity to interactions, True/False, if True some interactions in the originally drawn pairwise interactions are set to zero
 sparcity = False
@@ -69,6 +69,7 @@ comp_sparcity=0
 off_target_interactions=False
 
 #copypaste end
+
 
 #Don't touch the following seeds
 np.random.seed(species_seed)
