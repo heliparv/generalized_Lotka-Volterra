@@ -20,7 +20,7 @@ from graphics import abundances_line_chart
 #starting abundances are defined for community finder only, the repeats will have their own definition
 #sa_seed defines how starting abundances are drawn
 sa_seed = 55
-#starting abundances
+#starting abundances mean and standard deviation
 sa_mean = 100
 sa_std = 0.1
 

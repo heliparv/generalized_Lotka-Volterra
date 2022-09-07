@@ -1,7 +1,7 @@
 # generalized Lotka-Volterra modelling
 Modelling (microbial) communities with generalized Lotka-Volterra dynamics with fourth order Runge-Kutta method.
 
-####generalized Lotka-Volterra model
+#### generalized Lotka-Volterra model
 
 ![simple gLV equation](equations/simple_gLV.png)
 
