@@ -26,7 +26,7 @@ from create_data_outputs import initiate_df, output, relative_abundances, addabl
 no_of_samples = 20
 #In addition to numerical data the simulations can save figures of the community simulations.
 # These include the whole simulation, most of which is not available in the numerical data
-save_figures_of_communities = True
+save_figures_of_communities = False
 #name of the output used for files
 output_name = "output"
 
@@ -154,4 +154,4 @@ for i in range(len(starting_abundances)):
     rel_data = relative_abundances(sample)
     relative_abund_df = relative_abund_df.append(addable_to_frame(columns, i+1, sampled_times, rel_data))
 
-output(output_name, param_df, absolute_abund_df, relative_abund_df)
+output(output_name, param_df, absolute_abund_df, relative_abund_df, n, pairwise_interactions)
