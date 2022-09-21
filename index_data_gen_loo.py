@@ -76,7 +76,7 @@ sparcity_amount = 0.2
 #Settings for competition between species
 #comp_std defines standard deviation between interactions of winner-loser pairs in competition system, mean is set at winner interaction, loser randomly drawn
 comp_std = 0.05
-#comp_sparcity defines if competition model is applied to the entire community, sparcity < 1 decribes fraction left out and fraction >= 1 is number of species left out
+#comp_sparcity defines if competition model is applied to the entire community, sparcity < 1 decribes fraction left out
 comp_sparcity=0
 #off_target_interaction describes if species interactions left outside the system (comp_sparcity) are set to zero (when False) or kept as is (when True)
 off_target_interactions=False

@@ -27,7 +27,7 @@ sa_std = 0.1
 #copypaste start
 
 #Number of species
-n = 20
+n = 23
 #Time settings for simulation
 maxtime = 30
 time_increment = 0.1
@@ -50,7 +50,7 @@ cc_std = 0.3
 
 #overall interaction strength
 interact_mean = 0
-interact_std = 0.0004
+interact_std = 0
 
 
 #Competition settings:
@@ -58,13 +58,13 @@ interact_std = 0.0004
 #Add sparcity to interactions, True/False, if True some interactions in the originally drawn pairwise interactions are set to zero
 sparcity = False
 #sparcity_amount is equal to fraction of interactions set to zero after the initial draw
-sparcity_amount = 0.2
+sparcity_amount = 0
 
 #Settings for competition between species
 #comp_std defines standard deviation between interactions of winner-loser pairs in competition system, mean is set at winner interaction, loser randomly drawn
 comp_std = 0.05
-#comp_sparcity defines if competition model is applied to the entire community, sparcity < 1 decribes fraction left out and fraction >= 1 is number of species left out
-comp_sparcity=0
+#comp_sparcity defines if competition model is applied to the entire community, sparcity < 1 decribes fraction left out
+comp_sparcity=0.7
 #off_target_interaction describes if species interactions left outside the system (comp_sparcity) are set to zero (when False) or kept as is (when True)
 off_target_interactions=False
 
