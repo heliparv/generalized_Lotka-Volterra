@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from parameters import generate_growth_rates, generate_interactions, generate_abundances, add_sparcity, adjust_selfinteractions_for_carrying_capacity
 from sim_gLV_RK import gLV_RK
-from Cyclic_games import random_win_lose_system
+from Cyclic_games import random_win_lose_system, random_competition_system
 from graphics import abundances_line_chart
 
 #starting abundances are defined for community finder only, the repeats will have their own definition
@@ -29,28 +29,28 @@ sa_std = 0.1
 #Number of species
 n = 23
 #Time settings for simulation
-maxtime = 30
-time_increment = 0.1
+maxtime = 25
+time_increment = 0.05
 
 #Seed values for the random draw of community. Same seeds -> same community
 #species_seed chooses how bacteria growth rate and selfinteraction are randomly drawn
-species_seed = 23
+species_seed = 567
 #interact_seed chooses how interactions are randomly drawn
-interact_seed = 7372
+interact_seed = 73112
 
 #Following parameters determine distributions parameters are drawn from
 
 #Intrinsic growthrate
-ri_mean = 0.4
-ri_std = 0.1
+ri_mean = 0.6
+ri_std = 0.2
 
 #Carrying capacities in monoculture, which define selfinteractions
 cc_mean = 2000
-cc_std = 0.3
+cc_std = 0.2
 
 #overall interaction strength
-interact_mean = 0
-interact_std = 0
+interact_mean = -0.00003
+interact_std = 0.000006
 
 
 #Competition settings:
@@ -92,11 +92,13 @@ pairwise_interactions = generate_interactions(n, 1, interactions_seed, interact_
 if sparcity:
     pairwise_interactions = add_sparcity(pairwise_interactions, sparcity_amount, interactions_sparcity_seed)
 
-pairwise_interactions = random_win_lose_system(n, pairwise_interactions, competition_interactions_seed, comp_sparcity, competition_sparcity_seed, comp_std, competition_magnitude_seed, off_target_interactions)
+pairwise_interactions = random_competition_system(n, pairwise_interactions, comp_sparcity, competition_sparcity_seed, comp_std, competition_magnitude_seed, off_target_interactions)
 
 carrying_capacities = generate_abundances(n, cc_seed, cc_mean, cc_std)
 
 pairwise_interactions = adjust_selfinteractions_for_carrying_capacity(n, pairwise_interactions, ri, carrying_capacities)
+print(pairwise_interactions)
+print("")
 
 abundances = gLV_RK(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
 

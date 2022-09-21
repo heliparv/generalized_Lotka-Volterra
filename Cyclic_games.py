@@ -120,3 +120,22 @@ def random_win_lose_system(n, pairwise_interactions, seed_winlose, sparcity, see
                 new_interactions[i][j] = -interaction_ij
                 new_interactions[j][i] = interaction_ji
     return new_interactions
+
+def random_competition_system(n, pairwise_interactions, sparcity, seed_sparcity, interaction_std, seed_interaction, off_target_interactions=False):
+    np.random.seed(seed_sparcity)
+    draw = bernoulli(sparcity)
+    skip_list = list(map(bool, draw.rvs(int(((n*n)-n)/2))))
+    
+    np.random.seed(seed_interaction)
+    new_interactions = np.zeros_like(pairwise_interactions)
+    if off_target_interactions:
+        new_interactions[:] = pairwise_interactions
+    
+    for i in range(n):
+        for j in range(i+1, n):
+            skip = skip_list.pop()
+            if skip:
+                continue
+            new_interactions[i][j] = -abs(pairwise_interactions[i][j])
+            new_interactions[j][i] = -abs(np.random.normal(loc=new_interactions[i][j], scale=abs(new_interactions[i][j]*interaction_std)))
+    return new_interactions
