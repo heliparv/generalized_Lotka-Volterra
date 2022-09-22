@@ -97,8 +97,6 @@ pairwise_interactions = random_competition_system(n, pairwise_interactions, comp
 carrying_capacities = generate_abundances(n, cc_seed, cc_mean, cc_std)
 
 pairwise_interactions = adjust_selfinteractions_for_carrying_capacity(n, pairwise_interactions, ri, carrying_capacities)
-print(pairwise_interactions)
-print("")
 
 abundances = gLV_RK(n, maxtime, time_increment, pairwise_interactions, ri, starting_abundances)
 
